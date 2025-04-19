@@ -16,6 +16,7 @@ const BonAppetitDashboard = () => {
       }
     };
 
+
     let revenueChart, userGrowthChart, categoriesChart, reservationsChart;
 
     if (revenueCtx) {
@@ -167,51 +168,8 @@ const BonAppetitDashboard = () => {
 
   return (
     <>
-      {/* <Head>
-        <title>Bon Appétit - Admin Dashboard</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            tailwind.config = {
-              theme: {
-                extend: {
-                  colors: {
-                    wood: {
-                      50: '#faf6f2',
-                      100: '#f5ede3',
-                      200: '#ead9c7',
-                      300: '#ddc2a5',
-                      400: '#cca57d',
-                      500: '#bd8c5e',
-                      600: '#a97347',
-                      700: '#8c5e3b',
-                      800: '#734d34',
-                      900: '#5f402e',
-                    },
-                    olive: {
-                      50: '#f8f9f2',
-                      100: '#eef0e2',
-                      200: '#dde3c7',
-                      300: '#c5cea3',
-                      400: '#aab77d',
-                      500: '#8d9c5a',
-                      600: '#6f7c43',
-                      700: '#5a6538',
-                      800: '#4a5331',
-                      900: '#3e462c',
-                    }
-                  }
-                }
-              }
-            }
-          `
-        }} />
-        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-      </Head>
-      <Script src="https://cdn.jsdelivr.net/npm/chart.js" strategy="beforeInteractive" /> */}
 
       <div className="min-h-screen flex">
-        {/* Sidebar */}
         <aside className="w-64 bg-wood-800 text-white fixed h-full z-10 hidden md:block">
           <div className="p-4 border-b border-wood-700">
             <div className="flex items-center space-x-3">

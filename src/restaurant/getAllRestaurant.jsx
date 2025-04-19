@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
 import axios from 'axios';
 import Swal from "sweetalert2";
 
@@ -10,6 +9,7 @@ const RestaurantManagement = () => {
 if (!token) {
   console.log("Token manquant");
 }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +31,6 @@ if (!token) {
     fetchData(); 
   }, []); 
 
-  
   const handleButtonClick = async (restaurantId, action) => {
     try {
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
