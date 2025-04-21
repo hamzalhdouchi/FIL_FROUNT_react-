@@ -1,7 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { stringify } from "postcss";
 
+
+  // const token = sessionStorage.getItem('token');
+  // if (token) {
+  //   sessionStorage.removeItem('token');
+  // }
 const Login = ({ isLoading, setIsLoading }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -23,9 +29,12 @@ const Login = ({ isLoading, setIsLoading }) => {
       if (response.status === 200) {
         const { token } = response.data;
         sessionStorage.setItem("token", token);
-        const role = response.data.user.role_id;
+        console.log(token);
         
-        Swal.fire({
+        const role = response.data.user.role_id;
+      const user = response.data.user;
+      sessionStorage.setItem('user', JSON.stringify(user));
+      Swal.fire({
           icon: "success",
           title: response.data.message,
           text: "Bienvenue sur votre tableau de bord",
@@ -33,7 +42,6 @@ const Login = ({ isLoading, setIsLoading }) => {
           showConfirmButton: false,
         });
   
-        // Redirection selon le rôle
         if (role === 1) {
           window.location.href = "/home";
         } else if (role === 2 || role === 3) {

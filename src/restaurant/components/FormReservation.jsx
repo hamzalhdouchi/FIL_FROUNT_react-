@@ -120,16 +120,16 @@
                 <label htmlFor="special-requests" className="block text-sm font-medium text-wood-800 mb-1">Demandes spéciales</label>
                 <textarea 
                     id="special-requests" 
-                    name="specialRequests" 
+                    name="special_requests" 
                     rows="3" 
-                    value={reservationForm.specialRequests}
+                    value={reservationForm.special_requests}
                     onChange={handleReservationChange}
                     className="w-full px-4 py-2 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
                 ></textarea>
                 </div>
                 
                 <div className="pt-2">
-                <div className="flex items-center mb-2">
+                {/* <div className="flex items-center mb-2">
                     <input 
                     type="checkbox" 
                     id="preorderCheck" 
@@ -141,8 +141,8 @@
                     <label htmlFor="preorderCheck" className="ml-2 text-sm font-medium text-wood-700">
                     Je souhaite précommander des plats
                     </label>
-                </div>
-                
+                </div> */}
+{/*                 
                 {reservationForm.preorderCheck && (
                     <div className="space-y-2 pl-6 pt-2">
                     <p className="text-sm text-wood-600 mb-2">Sélectionnez les plats que vous souhaitez précommander</p>
@@ -172,7 +172,7 @@
                         )}
                     </div>
                     </div>
-                )}
+                )} */}
                 </div>
             </div>
             

@@ -6,8 +6,11 @@ import Notification from './components/notification';
 import Header from './components/layout/header';
 import Footer from './components/footer';
 import { useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
-const RestaurantMenu = () => {
+const token = sessionStorage.getItem('token');
+
+const RestaurantMenuUser = () => {
   const [menus, setMenus] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,12 +31,14 @@ const RestaurantMenu = () => {
     date: '',
     time: '',
     guests: '',
-    specialRequests: '',
+    special_requests: '',
     preorderCheck: false
   });
 
   const { restaurant_id } = useParams();  
-
+  console.log(typeof restaurant_id);
+  
+  const [user_id, setUser] = useState(0);
   const [dishModalState, setDishModalState] = useState({
     quantity: 1,
     notes: '',
@@ -42,25 +47,31 @@ const RestaurantMenu = () => {
 
   const restaurant = JSON.parse(sessionStorage.getItem('restaurant'));
   const selectedRestaurant = restaurant ? restaurant.find(r => r.id === parseInt(restaurant_id)) : null;
-  
-    console.log(selectedRestaurant); 
-  
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = sessionStorage.getItem('token');
-
-        const [menuResponse, categoryResponse] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/api/restaurants/${restaurant_id}/menus`, {
-            headers: { Authorization: `Bearer ${token}` }
-          }),
-          axios.get('http://127.0.0.1:8000/api/categories', {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-        ]);
-
+        console.log(token);
+      
+        let menuResponse, categoryResponse;
+      
+        if (token === null) {
+          [menuResponse, categoryResponse] = await Promise.all([
+            axios.get(`http://127.0.0.1:8000/api/restaurants/${restaurant_id}/menus`),
+            axios.get('http://127.0.0.1:8000/api/categories'),
+          ]);
+        } else {
+          [menuResponse, categoryResponse] = await Promise.all([
+            axios.get(`http://127.0.0.1:8000/api/restaurants/${restaurant_id}/menus`, {
+              headers: { Authorization: `Bearer ${token}` }
+            }),
+            axios.get('http://127.0.0.1:8000/api/categories', {
+              headers: { Authorization: `Bearer ${token}` }
+            }),
+          ]);
+        }
+      
         const allPlates = [];
         menuResponse.data.data.menu.forEach(menu => {
           if (menu.plate && menu.plate.length > 0) {
@@ -69,15 +80,20 @@ const RestaurantMenu = () => {
               category: plate.categorie.mon_categorie
             })));
           }
-        });
 
+          console.log(allPlates);
+          
+        });
+      
         setMenus(allPlates);
         setCategories(categoryResponse.data);
         setLoading(false);
+      
       } catch (err) {
         setError(err.message);
         setLoading(false);
       }
+      
     };
 
     fetchData();
@@ -89,7 +105,6 @@ const RestaurantMenu = () => {
     document.getElementById('date')?.setAttribute('min', `${yyyy}-${mm}-${dd}`);
   }, [restaurant_id]);
 
-  // Modal handlers
   const openTableReservationModal = () => setShowTableModal(true);
   const closeTableReservationModal = () => setShowTableModal(false);
 
@@ -135,7 +150,7 @@ const RestaurantMenu = () => {
       }
       return [...prev, newDish];
     });
-
+    
     displayToast(`${newDish.nom_plat} ajouté à votre commande`);
 
     if (dishModalState.addToReservation) {
@@ -177,37 +192,49 @@ const RestaurantMenu = () => {
     });
   };
 
-   const handleReservationSubmit = async (e) => {
+
+  const handleReservationSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const user = JSON.parse(sessionStorage.getItem('user'));
-      const restaurants = JSON.parse(sessionStorage.getItem('restaurant'));
-      const restaurant_id = sessionStorage.getItem('restaurant_id'); 
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    let user_idU = user.id;
+    console.log(user_idU);
+    setUser(user_idU);
 
-      const selectedRestaurant = restaurants.find(r => r.id === parseInt(restaurant_id));
+    const reservation__id = parseInt(restaurant_id);
+    const reservationDate = new Date(`${reservationForm.date} ${reservationForm.time}`);
 
-      const payload = {
-        ...reservationForm,
-        client_id: user?.id,
-        restaurant_id: selectedRestaurant?.id,
-        statut: 'en_attente',
-      };
+    if (reservationDate > Date.now()) {
+      console.log(reservationForm,restaurant_id,user_idU);
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/api/reservations", {
+          ...reservationForm,
+          restaurant_id: parseInt(restaurant_id),
+          user_id: user_idU
+        });
+        console.log("Réservation envoyée :", response.data);
+        setShowTableModal(false);
+        Swal.fire({
+          icon: "success",
+          title: response.data.message,
+          text: "Réservation créée avec succès.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
 
-      console.log(payload);
-      
-      const res = await axios.post('http://localhost:8000/api/reservations/', payload);
-      console.log('Réservation réussie', res.data);
-      alert("Réservation confirmée !");
-      setShowTableModal(false);
-      setReservationForm({
-        dateHeure: '',
-        duree: '',
-        nombrePersonnes: '',
-        table_numbre: '',
+      } catch (error) {
+        console.error("Erreur lors de la réservation :", error);
+        Swal.fire({
+          icon: "error",
+          title: "Erreur de réservation",
+          text: "Une erreur est survenue, veuillez réessayer plus tard.",
+        });
+      }
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur de réservation",
+        text: "La date et l'heure de la réservation doivent être dans le futur.",
       });
-    } catch (err) {
-      console.error("Erreur réservation:", err);
-      alert("Erreur lors de la réservation !");
     }
   };
 
@@ -239,19 +266,19 @@ const RestaurantMenu = () => {
                 >
                 Réserver une table
                 </button>
-                <a href="#" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-full text-sm font-medium transition-colors flex items-center">
+                {/* <a href="#" className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-full text-sm font-medium transition-colors flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 {selectedRestaurant.adresse}
-                </a>
+                </a> */}
             </div>
             </div>
         </section>
 
         {/* Restaurant Info */}
-        <section className="py-8 bg-white border-b border-gray-200">
+        {/* <section className="py-8 bg-white border-b border-gray-200">
             <div className="container mx-auto px-4">
             <div className="flex flex-wrap items-center justify-center gap-6">
                 <div className="flex items-center">
@@ -280,7 +307,7 @@ const RestaurantMenu = () => {
                 </div>
             </div>
             </div>
-        </section>
+        </section> */}
 
         <section className="py-8 bg-white border-b border-gray-200">
             <div className="container mx-auto px-4">
@@ -319,25 +346,30 @@ const RestaurantMenu = () => {
                     {categoryMenus.map(menu => (
                         <div key={menu.id} className="flex gap-4">
                         <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                            <img src={menu.image || 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'} 
+                            <img src="https://img.freepik.com/photos-premium/tokyo-japon-09-janvier-2018-chefs-cuisinent-dans-restaurant-delicieux-snack-japonais-plus-populaire-au-japon_175935-25.jpg?semt=ais_hybrid&w=740" 
                                 alt={menu.nom_plat} 
                                 className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1">
                             <div className="flex justify-between items-start mb-2">
-                            <h3 className="text-xl font-bold font-playfair">{menu.nom_plat}</h3>
-                            <span className="font-semibold text-wood-700">{menu.prix}€</span>
+                                <h3 className="text-xl font-bold font-playfair">{menu.nom_plat}</h3>
+                                <span className="font-semibold text-wood-700">{menu.prix}€</span>
                             </div>
+
                             <p className="text-wood-600 mb-2">{menu.desciption}</p>
+
                             <div className="flex items-center justify-between">
-                            <button 
-                                className="bg-wood-500 hover:bg-wood-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors"
-                                onClick={() => openDishOrderModal(menu)}
-                            >
-                                Réserver
-                            </button>
+                                {!token && (
+                                <button 
+                                    className="bg-wood-500 hover:bg-wood-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors"
+                                    onClick={() => openDishOrderModal(menu)}
+                                >
+                                    Réserver
+                                </button>
+                                )}
                             </div>
-                        </div>
+                            </div>
+                            
                         </div>
                     ))}
                     </div>
@@ -347,9 +379,6 @@ const RestaurantMenu = () => {
             </div>
         </section>
 
-        {/* ... Autres sections restent inchangées ... */}
-
-        {/* Modals */}
         <TableReservationModal
             showModal={showTableModal}
             closeModal={closeTableReservationModal}
@@ -387,12 +416,6 @@ const RestaurantMenu = () => {
                 >
                 Réserver maintenant
                 </button>
-                <button 
-                onClick={() => displayToast('La commande en ligne sera bientôt disponible !')}
-                className="bg-white hover:bg-wood-50 text-wood-700 border border-wood-300 px-8 py-3 rounded-full text-lg font-medium transition-colors"
-                >
-                Commander en ligne
-                </button>
             </div>
             </div>
         </section>
@@ -401,4 +424,4 @@ const RestaurantMenu = () => {
   );
 };
 
-export default RestaurantMenu;
+export default RestaurantMenuUser;

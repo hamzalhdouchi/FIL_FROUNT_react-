@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import Chart from 'chart.js/auto';
 import GetUsers from './Users/getAllUsers';
-import RestaurantManagement from './getAllRestaurant'
+import RestaurantManagement from './getAllRestaurant';
+import { useNavigate } from 'react-router-dom';
 
 const BonAppetitDashboard = () => {
   useEffect(() => {
@@ -166,6 +167,12 @@ const BonAppetitDashboard = () => {
     };
   }, []);
 
+  const handleLogout = () => {
+    const nav = useNavigate
+    sessionStorage.removeItem('user'); 
+    nav('/login');
+  };
+
   return (
     <>
 
@@ -218,10 +225,10 @@ const BonAppetitDashboard = () => {
           </nav>
           
           <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
-            <a href="#logout" className="flex items-center text-wood-300 hover:text-white">
+            <button onClick={handleLogout()} className="flex items-center text-wood-300 hover:text-white">
               <i className='bx bx-log-out text-xl mr-3'></i>
               <span>Logout</span>
-            </a>
+            </button>
           </div>
         </aside>
         
@@ -296,15 +303,7 @@ const BonAppetitDashboard = () => {
               </div>
               
               <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <input type="text" placeholder="Search..." className="pl-10 pr-4 py-2 rounded-lg border border-wood-200 focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent" />
-                  <i className='bx bx-search absolute left-3 top-2.5 text-wood-400'></i>
-                </div>
-                
-                <button className="relative p-2 text-wood-600 hover:bg-wood-100 rounded-full">
-                  <i className='bx bx-bell text-xl'></i>
-                  <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
+
                 
                 <div className="flex items-center space-x-2">
                   <div className="w-10 h-10 rounded-full bg-wood-200 flex items-center justify-center">
@@ -398,7 +397,6 @@ const BonAppetitDashboard = () => {
           
             <GetUsers />
 
-            {/* Restaurant Management Section */}
            <RestaurantManagement />
             
             {/* Statistics Section */}
