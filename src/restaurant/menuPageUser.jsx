@@ -243,8 +243,16 @@ const RestaurantMenuUser = () => {
     ? menus
     : menus.filter(menu => menu.category === activeCategory);
 
-  if (loading) return <div className="text-center py-20">Chargement...</div>;
-  if (error) return <div className="text-center py-20 text-red-500">Erreur: {error}</div>;
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-wood-700 border-solid"></div>
+          </div>
+        </div>
+      );
+    }
+     if (error) return <div className="text-center py-20 text-red-500">Erreur: {error}</div>;
 
     return (
         <div className="font-raleway bg-wood-50 text-wood-900">

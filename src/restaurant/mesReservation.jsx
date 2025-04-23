@@ -67,7 +67,7 @@ const ReservationsPage = () => {
         }),
         cancelled: allReservations.filter(res => res.status === 'Annulée')
       });
-      
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching reservations:', error);
       Swal.fire({
@@ -75,13 +75,13 @@ const ReservationsPage = () => {
         title: "Erreur",
         text: error.response?.data?.message || "Impossible de charger les réservations",
       });
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   }, [user]);
 
   useEffect(() => {
     fetchReservations();
+    setIsLoading(false);
+
   }, [fetchReservations]);
 
   const handleCancel = async (reservationId) => {
@@ -159,7 +159,6 @@ const ReservationsPage = () => {
   const handleReservationSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate date/time
     const reservationDateTime = new Date(`${reservationForm.date} ${reservationForm.time}`);
     if (reservationDateTime <= new Date()) {
       return Swal.fire({

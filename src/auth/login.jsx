@@ -42,12 +42,19 @@ const Login = ({ isLoading, setIsLoading }) => {
           showConfirmButton: false,
         });
   
-        if (role === 1) {
-          window.location.href = "/home";
-        } else if (role === 2 || role === 3) {
-          window.location.href = "/dashboard";
-        }
-      }
+        const redirectUrl = sessionStorage.getItem('redirect_url');
+
+        if (redirectUrl) {
+            window.location.href = redirectUrl;
+            sessionStorage.removeItem('redirect_url'); 
+        } else {
+            if (role === 1) {
+                window.location.href = "/home";
+            } else if (role === 2 || role === 3) {
+                window.location.href = "/dashboard";
+            }
+
+      }}
   
     } catch (err) {
       console.error("Erreur de connexion :", err.response?.data);

@@ -3,13 +3,13 @@ import React from 'react';
 const OrderModal = ({ 
   showModal, 
   closeModal, 
-  currentDish, 
-  dishModalState, 
-  handleDishModalChange, 
+  currentplate, 
+  plateModalState, 
+  handleplateModalChange, 
   handleQuantityChange,
-  addDishToSelection
+  addplateToSelection
 }) => {
-  if (!showModal || !currentDish) return null;
+  if (!showModal || !currentplate) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
@@ -26,13 +26,13 @@ const OrderModal = ({
         </div>
         <div className="p-6">
           <div className="mb-6">
-            <h4 className="text-xl font-bold font-playfair mb-2">{currentDish.nom_plat}</h4>
-            <p className="text-wood-600 mb-1">{currentDish.category}</p>
-            <p className="text-lg font-semibold text-wood-700">{currentDish.prix}€</p>
+            <h4 className="text-xl font-bold font-playfair mb-2">{currentplate.nom_plat}</h4>
+            <p className="text-wood-600 mb-1">{currentplate.category}</p>
+            <p className="text-lg font-semibold text-wood-700">{currentplate.prix}€</p>
           </div>
           
           <div className="mb-6">
-            <label htmlFor="dishQuantity" className="block text-sm font-medium text-wood-800 mb-2">Quantité</label>
+            <label htmlFor="plateQuantity" className="block text-sm font-medium text-wood-800 mb-2">Quantité</label>
             <div className="flex items-center">
               <button 
                 type="button" 
@@ -43,10 +43,10 @@ const OrderModal = ({
               </button>
               <input 
                 type="number" 
-                id="dishQuantity" 
+                id="plateQuantity" 
                 name="quantity" 
-                value={dishModalState.quantity}
-                onChange={handleDishModalChange}
+                value={plateModalState.quantity}
+                onChange={handleplateModalChange}
                 min="1" 
                 max="10" 
                 className="w-12 text-center mx-2 border border-wood-200 rounded-lg py-1 focus:outline-none focus:ring-2 focus:ring-wood-500"
@@ -62,36 +62,22 @@ const OrderModal = ({
           </div>
           
           <div className="mb-6">
-            <label htmlFor="dishNotes" className="block text-sm font-medium text-wood-800 mb-2">Notes spéciales</label>
+            <label htmlFor="plateNotes" className="block text-sm font-medium text-wood-800 mb-2">Notes spéciales</label>
             <textarea 
-              id="dishNotes" 
+              id="plateNotes" 
               name="notes" 
-              value={dishModalState.notes}
-              onChange={handleDishModalChange}
+              value={plateModalState.notes}
+              onChange={handleplateModalChange}
               rows="2" 
               placeholder="Ex: sans gluten, sans lactose, etc." 
               className="w-full px-4 py-2 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
             ></textarea>
           </div>
           
-          <div className="flex items-center mb-6">
-            <input 
-              type="checkbox" 
-              id="addToReservation" 
-              name="addToReservation" 
-              checked={dishModalState.addToReservation}
-              onChange={handleDishModalChange}
-              className="w-4 h-4 rounded border-wood-300 text-wood-600 focus:ring-wood-500" 
-            />
-            <label htmlFor="addToReservation" className="ml-2 text-sm font-medium text-wood-700">
-              Ajouter à ma réservation de table
-            </label>
-          </div>
-          
           <div className="flex space-x-4">
             <button 
               type="button"
-              onClick={addDishToSelection}
+              onClick={addplateToSelection}
               className="flex-1 py-3 px-4 bg-gradient-to-r from-wood-600 to-wood-700 text-white font-medium rounded-lg hover:from-wood-700 hover:to-wood-800 transition-all shadow-md hover:shadow-lg"
             >
               Ajouter à ma commande

@@ -54,7 +54,7 @@ const Register = ({ isLoading, setIsLoading }) => {
         
       } else if (selectedRole === "restaurant") {
         console.log(formData);
-        
+        sessionStorage.setItem('restaurant_idDach', JSON.stringify(formDataToSend));
         response = await axios.post("http://localhost:8000/api/restaurants", formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data'

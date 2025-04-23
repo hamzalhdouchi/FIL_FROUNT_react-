@@ -11,10 +11,19 @@ import ReservationsPage from './/restaurant/mesReservation'
 import UserProfile from './restaurant/profiel.jsx';
 import RestaurantMenuClient from './restaurant/menuPageClient.jsx';
 import RestaurantMenuUser from './restaurant/menuPageUser.jsx';
+import Page404 from './restaurant/404.jsx';
+import CommandesPage from './restaurant/mesCommend.jsx';
+import BonAppetitDashboards from './restaurant/restaurantDashbord.jsx';
+import AddCategoryModal from './restaurant/components/CategoreForm.jsx';
+import AddIngredientsModal from './restaurant/components/test.jsx';
+import CreatePlatModal from './restaurant/components/formPlates.jsx';
+
+
 const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path='/test' element={<CreatePlatModal />} />
         <Route path="/" element={<AuthPage />} />
         <Route path="/dashboard" element={<BonAppetitDashboard />} />
         <Route path="/get" element={<GetUsers/>} />
@@ -26,6 +35,10 @@ const App = () => {
         <Route path="/Profile" element={<UserProfile />} />
         <Route path="/BonAppetitCategories" element={<BonAppetitCategories/>} />
         <Route path="/home" element={<Home />} />
+        <Route path="/Commandes/:restaurant_id/table/:table_id" element={<CommandesPage />} />
+        <Route path="/BonAppetitDashboard" element={<BonAppetitDashboards />} />
+        <Route path="*"lement={<Page404 />} />
+
       </Routes>
     </Router>
   );
