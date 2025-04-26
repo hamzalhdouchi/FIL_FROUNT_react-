@@ -10,9 +10,9 @@ const MesCommandesButton = ({ restaurant_id, table_id }) => {
   return (
     <section className="py-16 bg-wood-100">
     <div className="container mx-auto px-4 text-center">
-      <h2 className="text-3xl md:text-4xl font-playfair font-bold mb-6">Voir vos commandes</h2>
+      <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">Voir vos commandes</h2>
       <p className="text-wood-700 mb-8 max-w-2xl mx-auto">
-      Consultez vos commandes en cours et retrouvez facilement les plats que vous avez précommandés pour une expérience culinaire sans attente.      </p>
+      Consultez vos commandes en cours et retrouvez facilement les plats que vous avez précommandés pour une expérience culinaire serif attente.      </p>
       <div className="flex flex-wrap justify-center gap-4">
         <button 
           onClick={handleNavigation}

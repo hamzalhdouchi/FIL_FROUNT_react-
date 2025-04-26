@@ -87,7 +87,7 @@ const DashboardRestaurant = () => {
             <i className='bx bx-restaurant text-xl'></i>
           </div>
           <div>
-            <h1 className="font-bold text-lg brand-text">Bon Appétit</h1>
+            <h1 className="font-bold text-lg brand-text">Serve Quick</h1>
             <p className="text-xs text-wood-300">Gestion Restaurant</p>
           </div>
         </div>
@@ -152,7 +152,7 @@ const DashboardRestaurant = () => {
             <div className="w-10 h-10 rounded-full bg-wood-600 flex items-center justify-center">
               <i className='bx bx-restaurant text-xl'></i>
             </div>
-            <h1 className="font-bold text-lg brand-text">Bon Appétit</h1>
+            <h1 className="font-bold text-lg brand-text">Serve Quick</h1>
           </div>
           <button id="close-sidebar" className="text-wood-300 hover:text-white">
             <i className='bx bx-x text-2xl'></i>
@@ -635,7 +635,7 @@ const DashboardRestaurant = () => {
       </main>
       
       <footer className="bg-white border-t border-wood-200 py-4 px-6 text-center text-wood-600 text-sm">
-        <p className="brand-text">© 2025 Bon Appétit. Tous droits réservés.</p>
+        <p className="brand-text">© 2025 Serve Quick. Tous droits réservés.</p>
       </footer>
     </div>
   </div>

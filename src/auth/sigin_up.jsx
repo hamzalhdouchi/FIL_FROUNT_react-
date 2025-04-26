@@ -15,6 +15,9 @@ const Register = ({ isLoading, setIsLoading }) => {
     vehicule: "",
     zone: "",
     role_id: "1",
+    image: null,
+    name_Menu: '',
+
   });
 
   const handleInputChange = (e) => {
@@ -50,12 +53,11 @@ const Register = ({ isLoading, setIsLoading }) => {
                 "Content-Type": "application/json",
               },
         });
-        console.log(response);
+
         
       } else if (selectedRole === "restaurant") {
-        console.log(formData);
-        sessionStorage.setItem('restaurant_idDach', JSON.stringify(formDataToSend));
-        response = await axios.post("http://localhost:8000/api/restaurants", formDataToSend, {
+        console.log(formData.adresse, formData.nom_Restaurant, formData.zone_Livraison, formData.name_Menu);
+                response = await axios.post("http://localhost:8000/api/restaurants", formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -72,9 +74,13 @@ const Register = ({ isLoading, setIsLoading }) => {
         title: "Succès!",
         text: response.data.message || "Compte créé avec succès.",
         icon: "success",
-        confirmButtonText: "OK",
+        timer: 1000,
       });
 
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err) {
       console.error(err);
       Swal.fire({
@@ -100,7 +106,7 @@ const Register = ({ isLoading, setIsLoading }) => {
     <form onSubmit={handleRegister} className="space-y-6">
       {/* Role Selection */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-wood-800">Je m'inscris en tant que</label>
+        <label className="block text-sm font-medium font-serif text-wood-800">Je m'inscris en tant que</label>
         <div className="grid grid-cols-3 gap-3">
           <button
             type="button"
@@ -110,7 +116,7 @@ const Register = ({ isLoading, setIsLoading }) => {
             }`}
           >
             <i className="bx bx-user text-xl mb-1"></i>
-            <span className="text-xs">Utilisateur</span>
+            <span className="font-serif text-xs">Utilisateur</span>
           </button>
           <button
             type="button"
@@ -120,7 +126,7 @@ const Register = ({ isLoading, setIsLoading }) => {
             }`}
           >
             <i className="bx bx-restaurant text-xl mb-1"></i>
-            <span className="text-xs">Restaurant</span>
+            <span className="font-serif text-xs">Restaurant</span>
           </button>
           <button
             type="button"
@@ -130,7 +136,7 @@ const Register = ({ isLoading, setIsLoading }) => {
             }`}
           >
             <i className="bx bx-cycling text-xl mb-1"></i>
-            <span className="text-xs">Livreur</span>
+            <span className="font-serif text-xs">Livreur</span>
           </button>
         </div>
       </div>
@@ -138,7 +144,7 @@ const Register = ({ isLoading, setIsLoading }) => {
       {/* Common Fields */}
       <div className="space-y-4">
         <div className="space-y-2">
-          <label htmlFor="signup-email" className="block text-sm font-medium text-wood-800">Email</label>
+          <label htmlFor="signup-email" className="block text-sm font-serif font-medium text-wood-800">Email</label>
           <div className="relative">
             <i className="bx bx-envelope absolute left-3 top-3 text-wood-400"></i>
             <input
@@ -155,7 +161,7 @@ const Register = ({ isLoading, setIsLoading }) => {
         </div>
         
         <div className="space-y-2">
-          <label htmlFor="signup-password" className="block text-sm font-medium text-wood-800">Mot de passe</label>
+          <label htmlFor="signup-password" className="block text-sm font-serif font-medium text-wood-800">Mot de passe</label>
           <div className="relative">
             <i className="bx bx-lock-alt absolute left-3 top-3 text-wood-400"></i>
             <input
@@ -172,7 +178,7 @@ const Register = ({ isLoading, setIsLoading }) => {
         </div>
         
         <div className="space-y-2">
-          <label htmlFor="signup-telephone" className="block text-sm font-medium text-wood-800">Téléphone</label>
+          <label htmlFor="signup-telephone" className="block text-sm font-serif font-medium text-wood-800">Téléphone</label>
           <div className="relative">
             <i className="bx bx-phone absolute left-3 top-3 text-wood-400"></i>
             <input
@@ -188,12 +194,10 @@ const Register = ({ isLoading, setIsLoading }) => {
         </div>
       </div>
 
-      {/* User-specific fields */}
-      {selectedRole === "user" && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="signup-nom" className="block text-sm font-medium text-wood-800">Nom</label>
+              <label htmlFor="signup-nom" className="block text-sm font-serif font-medium text-wood-800">Nom</label>
               <div className="relative">
                 <i className="bx bx-user absolute left-3 top-3 text-wood-400"></i>
                 <input
@@ -210,7 +214,7 @@ const Register = ({ isLoading, setIsLoading }) => {
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="signup-prenom" className="block text-sm font-medium text-wood-800">Prénom</label>
+              <label htmlFor="signup-prenom" className="block text-sm font-serif font-medium text-wood-800">Prénom</label>
               <div className="relative">
                 <i className="bx bx-user absolute left-3 top-3 text-wood-400"></i>
                 <input
@@ -227,112 +231,113 @@ const Register = ({ isLoading, setIsLoading }) => {
             </div>
           </div>
         </div>
-      )}
+    
 
       {/* Restaurant-specific fields */}
-      {selectedRole === "restaurant" && (
-  <div className="space-y-4">
-    <div className="space-y-2">
-      <label htmlFor="signup-restaurant-name" className="block text-sm font-medium text-wood-800">Nom du Restaurant</label>
-      <div className="relative">
-        <i className="bx bx-store absolute left-3 top-3 text-wood-400"></i>
-        <input
-          id="signup-restaurant-name"
-          name="nom_Restaurant"
-          type="text"
-          placeholder="Le Gourmet"
-          required
-          value={formData.nom_Restaurant}
-          onChange={handleInputChange}
-          className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
-        />
-      </div>
-    </div>
-
-    <div className="space-y-2">
-      <label htmlFor="signup-restaurant-address" className="block text-sm font-medium text-wood-800">Adresse</label>
-      <div className="relative">
-        <i className="bx bx-map absolute left-3 top-3 text-wood-400"></i>
-        <input
-          id="signup-restaurant-address"
-          name="adresse"
-          type="text"
-          placeholder="123 Rue de la Gastronomie, 75001 Paris"
-          required
-          value={formData.adresse}
-          onChange={handleInputChange}
-          className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
-        />
-      </div>
-    </div>
-
-    {/* Zone de Livraison Field */}
-    <div className="space-y-2">
-      <label htmlFor="signup-restaurant-zone" className="block text-sm font-medium text-wood-800">Zone de Livraison</label>
-      <div className="relative">
-        <i className="bx bx-map-alt absolute left-3 top-3 text-wood-400"></i>
-        <input
-          id="signup-restaurant-zone"
-          name="zone_Livraison"
-          type="text"
-          placeholder="Zone de livraison (ex. Paris 1er, 2ème)"
-          required
-          value={formData.zone_Livraison}
-          onChange={handleInputChange}
-          className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
-        />
-      </div>
-    </div>
-
-    {/* Nom du Directeur Field */}
-    <div className="space-y-2">
-      <label htmlFor="signup-restaurant-director" className="block text-sm font-medium text-wood-800">Nom du Directeur</label>
-      <div className="relative">
-        <i className="bx bx-user absolute left-3 top-3 text-wood-400"></i>
-        <input
-          id="signup-restaurant-director"
-          name="directeur"
-          type="text"
-          placeholder="Michel Dupont"
-          required
-          value={formData.directeur}
-          onChange={handleInputChange}
-          className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
-        />
-      </div>
-    </div>
-
-    {/* Image Upload Field */}
-    <div className="space-y-2">
-      <label htmlFor="restaurant-image" className="block text-sm font-medium text-wood-800">
-        Logo/Photo du restaurant
-      </label>
-      <div className="relative">
-        <i className="bx bx-image absolute left-3 top-3 text-wood-400"></i>
-        <input
-          id="restaurant-image"
-          name="image"
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-wood-50 file:text-wood-700 hover:file:bg-wood-100"
-        />
-      </div>
-      {formData.image && (
-        <div className="mt-2 flex items-center space-x-4">
-          <img 
-            src={URL.createObjectURL(formData.image)} 
-            alt="Preview" 
-            className="h-16 w-16 object-cover rounded border border-wood-200"
+        {selectedRole === "restaurant" && (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <label htmlFor="signup-restaurant-name" className="block text-sm font-serif font-medium text-wood-800">Nom du Restaurant</label>
+        <div className="relative">
+          <i className="bx bx-store absolute left-3 top-3 text-wood-400"></i>
+          <input
+            id="signup-restaurant-name"
+            name="nom_Restaurant"
+            type="text"
+            placeholder="Le Gourmet"
+            required
+            value={formData.nom_Restaurant}
+            onChange={handleInputChange}
+            className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
           />
-          <span className="text-sm text-wood-600">
-            {formData.image.name}
-          </span>
         </div>
-      )}
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="signup-restaurant-address" className="block text-sm font-serif font-medium text-wood-800">Adresse</label>
+        <div className="relative">
+          <i className="bx bx-map absolute left-3 top-3 text-wood-400"></i>
+          <input
+            id="signup-restaurant-address"
+            name="adresse"
+            type="text"
+            placeholder="123 Rue de la Gastronomie, 75001 Paris"
+            required
+            value={formData.adresse}
+            onChange={handleInputChange}
+            className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+
+      {/* Zone de Livraison Field */}
+      <div className="space-y-2">
+        <label htmlFor="signup-restaurant-zone" className="block text-sm font-medium font-serif text-wood-800">Zone de Livraison</label>
+        <div className="relative">
+          <i className="bx bx-map-alt absolute left-3 top-3 text-wood-400"></i>
+          <input
+            id="signup-restaurant-zone"
+            name="zone_Livraison"
+            type="text"
+            placeholder="Zone de livraison (ex. Paris 1er, 2ème)"
+            required
+            value={formData.zone_Livraison}
+            onChange={handleInputChange}
+            className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+
+ 
+
+      <div className="space-y-2">
+        <label htmlFor="signup-restaurant-director" className="block text-sm font-medium font-serif text-wood-800">Nom du Menu</label>
+        <div className="relative">
+        <i className="bx bx-book-open absolute left-3 top-3 text-wood-400"></i> 
+        <input
+            id="signup-restaurant-director"
+            name="name_Menu"
+            type="text"
+            placeholder="Menu Gourmet"
+            required
+            value={formData.name_Menu}
+            onChange={handleInputChange}
+            className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+
+      {/* Image Upload Field */}
+      <div className="space-y-2">
+        <label htmlFor="restaurant-image" className="block text-sm font-medium text-wood-800">
+          Logo/Photo du restaurant
+        </label>
+        <div className="relative">
+          <i className="bx bx-image absolute left-3 top-3 text-wood-400"></i>
+          <input
+            id="restaurant-image"
+            name="image"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-wood-50 file:text-wood-700 hover:file:bg-wood-100"
+          />
+        </div>
+        {formData.image && (
+          <div className="mt-2 flex items-center space-x-4">
+            <img 
+              src={URL.createObjectURL(formData.image)} 
+              alt="Preview" 
+              className="h-16 w-16 object-cover rounded border border-wood-200"
+            />
+            <span className="text-sm text-wood-600">
+              {formData.image.name}
+            </span>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-)}
+  )}
 
 
 
@@ -340,7 +345,7 @@ const Register = ({ isLoading, setIsLoading }) => {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="signup-livreur-nom" className="block text-sm font-medium text-wood-800">Nom</label>
+              <label htmlFor="signup-livreur-nom" className="block text-sm font-serif font-medium text-wood-800">Nom</label>
               <div className="relative">
                 <i className="bx bx-user absolute left-3 top-3 text-wood-400"></i>
                 <input
@@ -357,7 +362,7 @@ const Register = ({ isLoading, setIsLoading }) => {
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="signup-livreur-prenom" className="block text-sm font-medium text-wood-800">Prénom</label>
+              <label htmlFor="signup-livreur-prenom" className="block text-sm font-serif font-medium text-wood-800">Prénom</label>
               <div className="relative">
                 <i className="bx bx-user absolute left-3 top-3 text-wood-400"></i>
                 <input
@@ -375,7 +380,7 @@ const Register = ({ isLoading, setIsLoading }) => {
           </div>
           
           <div className="space-y-2">
-            <label htmlFor="signup-livreur-vehicule" className="block text-sm font-medium text-wood-800">Type de véhicule</label>
+            <label htmlFor="signup-livreur-vehicule" className="block text-sm font-serif font-medium text-wood-800">Type de véhicule</label>
             <div className="relative">
               <i className="bx bx-car absolute left-3 top-3 text-wood-400"></i>
               <select
@@ -384,7 +389,7 @@ const Register = ({ isLoading, setIsLoading }) => {
                 required
                 value={formData.vehicule}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-4 py-3 border border-wood-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border border-wood-200 font-serif rounded-lg focus:outline-none focus:ring-2 focus:ring-wood-500 focus:border-transparent"
               >
                 <option value="">Sélectionnez un véhicule</option>
                 <option value="velo">Vélo</option>
@@ -396,7 +401,7 @@ const Register = ({ isLoading, setIsLoading }) => {
           </div>
           
           <div className="space-y-2">
-            <label htmlFor="signup-livreur-zone" className="block text-sm font-medium text-wood-800">Zone de livraison</label>
+            <label htmlFor="signup-livreur-zone" className="block text-sm font-serif font-medium text-wood-800">Zone de livraison</label>
             <div className="relative">
               <i className="bx bx-map-alt absolute left-3 top-3 text-wood-400"></i>
               <input

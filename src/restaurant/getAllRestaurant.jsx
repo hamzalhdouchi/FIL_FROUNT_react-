@@ -95,10 +95,8 @@ const RestaurantManagement = () => {
   return (
     <section id="restaurants" className="mb-8">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-bold text-wood-800">Restaurant Management</h3>
-        <button className="bg-wood-600 hover:bg-wood-700 text-white px-4 py-2 rounded-lg flex items-center">
-          <i className='bx bx-plus mr-2'></i> Add New Restaurant
-        </button>
+        <h3 className="text-xl font-serif text-wood-800">Restaurant Management</h3>
+      
       </div>
 
       {loading && <p className="text-wood-600 p-4">Chargement des données...</p>}
@@ -110,7 +108,7 @@ const RestaurantManagement = () => {
             <div key={restaurant.id} className="bg-white rounded-xl shadow-md border border-wood-100 overflow-hidden">
               <div className="h-40 bg-wood-600 relative">
                 <img 
-                  src={`http://127.0.0.1:8000/api/storage/${restaurant.image}`} 
+                      src={`http://localhost:8000/storage/${restaurant.image}`}
                   alt={restaurant.nom_Restaurant} 
                   className="w-full h-full object-cover" 
                 />
@@ -121,7 +119,7 @@ const RestaurantManagement = () => {
                 </div>
               </div>
               <div className="p-4">
-                <h4 className="font-bold text-wood-800 text-lg mb-1">{restaurant.nom_Restaurant}</h4>
+                <h4 className="font-serif text-wood-800 text-lg mb-1">{restaurant.nom_Restaurant}</h4>
                 <p className="text-wood-600 text-sm mb-3">{restaurant.cuisine} • {restaurant.price_range}</p>
                 <div className="flex items-center text-sm mb-3">
                   <i className='bx bxs-map text-wood-500 mr-1'></i>
@@ -142,9 +140,7 @@ const RestaurantManagement = () => {
                       <i className='bx bx-x'></i> Refuse
                     </button>
                   )}
-                  <button className="text-wood-600 hover:text-wood-800">
-                    <i className='bx bx-show'></i> View
-                  </button>
+                  
                   <button onClick={() => handleButtonDelete(restaurant.id)} className="text-red-600 hover:text-red-800">
                     <i className='bx bx-trash'></i> Delete
                   </button>

@@ -47,9 +47,9 @@ const ExternalScriptComponent = () => {
                 900: '#3e462c',
               },
               fontFamily: {
-                'sans': ['Poppins', 'sans-serif'],
+                'sans': ['Poppins', 'serif-serif'],
                 'serif': ['Lora', 'serif'],
-                'brand': ['Montserrat', 'sans-serif'],
+                'brand': ['Montserrat', 'serif-serif'],
               }
             }
           }

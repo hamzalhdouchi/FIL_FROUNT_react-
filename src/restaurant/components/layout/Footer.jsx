@@ -6,13 +6,13 @@ const Footer = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-playfair font-bold mb-4">Serve Quick</h3>
+              <h3 className="text-xl font-serif font-bold mb-4">Serve Quick</h3>
               <p className="mb-4">La meilleure façon de découvrir et réserver dans les restaurants de qualité près de chez vous.</p>
               <p>&copy; 2023 Serve Quick. Tous droits réservés.</p>
             </div>
             
             <div>
-              <h3 className="text-xl font-playfair font-bold mb-4">Liens Rapides</h3>
+              <h3 className="text-xl font-serif font-bold mb-4">Liens Rapides</h3>
               <ul className="space-y-2">
                 <li><a href="#" className="hover:text-wood-100 transition">Accueil</a></li>
                 <li><a href="#" className="hover:text-wood-100 transition">Restaurants</a></li>
@@ -23,7 +23,7 @@ const Footer = () => {
             </div>
             
             <div>
-              <h3 className="text-xl font-playfair font-bold mb-4">Légal</h3>
+              <h3 className="text-xl font-serif font-bold mb-4">Légal</h3>
               <ul className="space-y-2">
                 <li><a href="#" className="hover:text-wood-100 transition">Conditions d'utilisation</a></li>
                 <li><a href="#" className="hover:text-wood-100 transition">Politique de confidentialité</a></li>
@@ -33,7 +33,7 @@ const Footer = () => {
             </div>
             
             <div>
-              <h3 className="text-xl font-playfair font-bold mb-4">Newsletter</h3>
+              <h3 className="text-xl font-serif font-bold mb-4">Newsletter</h3>
               <p className="mb-4">Inscrivez-vous pour recevoir nos offres spéciales et découvrir les nouveaux restaurants.</p>
               <form className="flex">
                 <input type="email" placeholder="Votre email" className="px-4 py-2 w-full rounded-l-md focus:outline-none text-gray-800" />

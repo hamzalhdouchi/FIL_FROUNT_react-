@@ -180,7 +180,7 @@ const RestaurantMenuClient = () => {
       notes: plate.notes
     }))
   };
-  console.log(commandeData['plats']);
+  console.log(commandeData);
   
 
     try {
@@ -239,7 +239,7 @@ const RestaurantMenuClient = () => {
           <div className="mb-4">
             <span className="inline-block px-4 py-1 bg-wood-700 text-white text-sm font-medium rounded-full">Maroc</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-playfair font-bold mb-4">Serve Quick</h1>
+          <h1 className="text-4xl md:text-6xl font-serif font-bold mb-4">Serve Quick</h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl">Une cuisine française raffinée dans un cadre élégant. Spécialités de fruits de mer et vins fins.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <button 
@@ -287,21 +287,21 @@ const RestaurantMenuClient = () => {
             return (
               <div key={category.id} className="menu-category mb-16">
                 
-                <h2 className="text-3xl md:text-4xl font-playfair font-bold text-center mb-12">{category.mon_categorie}</h2>
+                <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">{category.mon_categorie}</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {categoryMenus.map(menu => (
                     <div key={menu.id} className="flex gap-4">
                       <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
                         <img 
-                          src={menu.image || "https://img.freepik.com/photos-premium/tokyo-japon-09-janvier-2018-chefs-cuisinent-dans-restaurant-delicieux-snack-japonais-plus-populaire-au-japon_175935-25.jpg"} 
+                            src={`http://localhost:8000/storage/${menu.image}`}
                           alt={menu.nom_plat} 
                           className="w-full h-full object-cover" 
                         />
                       </div>
                       <div className="flex-1">
                         <div className="flex justify-between items-start mb-2">
-                          <h3 className="text-xl font-bold font-playfair">{menu.nom_plat}</h3>
+                          <h3 className="text-xl font-bold font-serif">{menu.nom_plat}</h3>
                           <span className="font-semibold text-wood-700">{menu.prix}€</span>
                         </div>
                         <p className="text-wood-600 mb-2">{menu.desciption}</p>

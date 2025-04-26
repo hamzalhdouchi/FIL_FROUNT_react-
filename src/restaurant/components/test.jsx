@@ -1,124 +1,79 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import axios from 'axios';
 
-const CreatePlatModal = ({ closeModal, onDishCreated }) => {
-  const [categories, setCategories] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
+const AddIngredientsModal = ({ closeModal, handleSubmitIngredients }) => {
+  const [ingredients, setIngredients] = useState([
+    { nom_ingredient: '', stock: '', unite_mesure: '' },
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-  const [form, setForm] = useState({
-    nom_plat: '',
-    description: '',
-    prix: '',
-    temps_preparation: '',
-    disponible: true,
-    image: null,
-    categorie_id: '',
-    ingredients: []
-  });
-
-  // Chargement des données initiales
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [categoriesRes, ingredientsRes] = await Promise.all([
-          axios.get('/api/categories'),
-          axios.get('/api/ingredients')
-        ]);
-        setCategories(categoriesRes.data);
-        setIngredients(ingredientsRes.data);
-      } catch (err) {
-        console.error("Erreur de chargement des données", err);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const handleChange = useCallback((e) => {
-    const { name, value, type, checked, files } = e.target;
-
-    setForm(prev => {
-      if (type === 'file') {
-        return { ...prev, [name]: files[0] };
-      } else if (type === 'checkbox') {
-        return { ...prev, [name]: checked };
-      } else if (name === 'ingredients') {
-        const selected = Array.from(e.target.selectedOptions, opt => opt.value);
-        return { ...prev, ingredients: selected };
-      } else {
-        return { ...prev, [name]: value };
-      }
+  const handleChange = useCallback((index, e) => {
+    const { name, value } = e.target;
+    setIngredients(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [name]: value };
+      return updated;
     });
   }, []);
 
-  const validateForm = useCallback(() => {
-    if (!form.nom_plat.trim()) {
-      setError("Le nom du plat est requis");
-      return false;
-    }
-    if (!form.prix || isNaN(form.prix) ){
-      setError("Le prix doit être un nombre valide");
-      return false;
-    }
-    if (!form.temps_preparation || isNaN(form.temps_preparation)) {
-      setError("Le temps de préparation doit être un nombre valide");
-      return false;
-    }
-    if (!form.categorie_id) {
-      setError("Veuillez sélectionner une catégorie");
-      return false;
-    }
-    if (form.ingredients.length === 0) {
-      setError("Veuillez sélectionner au moins un ingrédient");
-      return false;
-    }
-    if (!form.image) {
-      setError("Une image est requise");
-      return false;
+  const addIngredientField = useCallback(() => {
+    setIngredients(prev => [...prev, { nom_ingredient: '', stock: '', unite_mesure: '' }]);
+  }, []);
+
+  const removeIngredientField = useCallback((index) => {
+    setIngredients(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const validateIngredients = useCallback(() => {
+    for (const [i, ing] of ingredients.entries()) {
+      if (!ing.nom_ingredient.trim()) {
+        setError(`Le nom de l'ingrédient #${i + 1} est requis`);
+        return false;
+      }
+      if (isNaN(ing.stock) ){
+        setError(`Le stock de l'ingrédient #${i + 1} doit être un nombre`);
+        return false;
+      }
+      if (!ing.unite_mesure.trim()) {
+        setError(`L'unité de mesure de l'ingrédient #${i + 1} est requise`);
+        return false;
+      }
     }
     return true;
-  }, [form]);
+  }, [ingredients]);
 
-  const handleSubmit = useCallback(async (e) => {
+  const handleFormSubmit = useCallback(async (e) => {
     e.preventDefault();
     setError(null);
+    setSuccess(false);
 
-    if (!validateForm()) return;
-
-    const formData = new FormData();
-    formData.append('nom_plat', form.nom_plat);
-    formData.append('description', form.description);
-    formData.append('prix', form.prix);
-    formData.append('temps_preparation', form.temps_preparation);
-    formData.append('disponible', form.disponible);
-    formData.append('categorie_id', form.categorie_id);
-    formData.append('image', form.image);
-    form.ingredients.forEach(id => formData.append('ingredients[]', id));
+    if (!validateIngredients()) return;
 
     try {
       setIsLoading(true);
-      const response = await axios.post('/api/plats', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      onDishCreated(response.data);
-      closeModal();
-    } catch (err) {
-      console.error("Erreur lors de la création du plat", err);
-      setError(err.response?.data?.message || "Une erreur est survenue");
+      const response = await axios.post('http://localhost:8000/api/ingredients', {ingredients});
+      
+      if (response.status === 201) {
+        setSuccess(true);
+        handleSubmitIngredients(ingredients);
+        setTimeout(closeModal, 1000); 
+      }
+      
+    } catch (error) {
+      console.error('Erreur:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [form, validateForm, closeModal, onDishCreated]);
+  }, [ingredients, validateIngredients, handleSubmitIngredients, closeModal]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-xl shadow-2xl max-w-xl w-full mx-4 overflow-y-auto max-h-[90vh]">
-        <div className="bg-wood-700 text-white py-4 px-6 sticky top-0">
+      <div className="bg-white rounded-xl shadow-2xl max-w-xl w-full mx-4 overflow-hidden modal-enter">
+        <div className="bg-wood-700 text-white py-4 px-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-xl font-bold font-playfair">Ajouter un nouveau plat</h3>
+            <h3 className="text-xl font-bold font-serif">Ajouter des Ingrédients</h3>
             <button 
               onClick={closeModal} 
               className="text-white hover:text-wood-200 transition-colors"
@@ -131,153 +86,126 @@ const CreatePlatModal = ({ closeModal, onDishCreated }) => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleFormSubmit} className="p-6 space-y-4">
+          {/* Messages d'état */}
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
               {error}
             </div>
           )}
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nom du plat *</label>
-            <input
-              type="text"
-              name="nom_plat"
-              value={form.nom_plat}
-              onChange={handleChange}
-              disabled={isLoading}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-wood-500 focus:border-wood-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              disabled={isLoading}
-              rows={3}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-wood-500 focus:border-wood-500"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Prix (€) *</label>
-              <input
-                type="number"
-                name="prix"
-                value={form.prix}
-                onChange={handleChange}
-                disabled={isLoading}
-                min="0"
-                step="0.01"
-                className="w-full px-4 py-2 border rounded-lg focus:ring-wood-500 focus:border-wood-500"
-                required
-              />
+          {success && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+              Ingrédients enregistrés avec succès !
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Temps préparation (min) *</label>
-              <input
-                type="number"
-                name="temps_preparation"
-                value={form.temps_preparation}
-                onChange={handleChange}
-                disabled={isLoading}
-                min="1"
-                className="w-full px-4 py-2 border rounded-lg focus:ring-wood-500 focus:border-wood-500"
-                required
-              />
+          )}
+
+          {/* Liste des ingrédients */}
+          {ingredients.map((ingredient, index) => (
+            <div key={index} className="grid grid-cols-12 gap-4 items-end border-b border-gray-200 pb-4 mb-4">
+              <div className="col-span-4">
+                <label className="block text-sm font-medium text-wood-800 mb-1">Nom *</label>
+                <input
+                  type="text"
+                  name="nom_ingredient"
+                  value={ingredient.nom_ingredient}
+                  onChange={(e) => handleChange(index, e)}
+                  required
+                  disabled={isLoading}
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-wood-500 focus:outline-none disabled:bg-gray-100"
+                />
+              </div>
+              
+              <div className="col-span-3">
+                <label className="block text-sm font-medium text-wood-800 mb-1">Stock *</label>
+                <input
+                  type="number"
+                  name="stock"
+                  min="0"
+                  step="0.01"
+                  value={ingredient.stock}
+                  onChange={(e) => handleChange(index, e)}
+                  required
+                  disabled={isLoading}
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-wood-500 focus:outline-none disabled:bg-gray-100"
+                />
+              </div>
+              
+              <div className="col-span-3">
+                <label className="block text-sm font-medium text-wood-800 mb-1">Unité *</label>
+                <select
+                  name="unite_mesure"
+                  value={ingredient.unite_mesure}
+                  onChange={(e) => handleChange(index, e)}
+                  required
+                  disabled={isLoading}
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-wood-500 focus:outline-none disabled:bg-gray-100"
+                >
+                  <option value="">Sélectionner</option>
+                  <option value="g">Grammes (g)</option>
+                  <option value="kg">Kilogrammes (kg)</option>
+                  <option value="ml">Millilitres (ml)</option>
+                  <option value="L">Litres (L)</option>
+                  <option value="unité">Unité</option>
+                </select>
+              </div>
+              
+              <div className="col-span-2 flex justify-end">
+                {index > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => removeIngredientField(index)}
+                    className="text-red-500 hover:text-red-700 disabled:text-gray-400"
+                    disabled={isLoading}
+                    title="Supprimer"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          ))}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Image *</label>
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleChange}
+          <div className="flex justify-between">
+            <button
+              type="button"
+              onClick={addIngredientField}
               disabled={isLoading}
-              className="w-full px-4 py-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-wood-50 file:text-wood-700 hover:file:bg-wood-100"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
-            <select
-              name="categorie_id"
-              value={form.categorie_id}
-              onChange={handleChange}
-              disabled={isLoading}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-wood-500 focus:border-wood-500"
-              required
+              className="text-sm font-medium text-wood-700 hover:text-wood-900 disabled:text-gray-400 flex items-center"
             >
-              <option value="">Sélectionner une catégorie</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.nom}</option>
-              ))}
-            </select>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Ajouter un ingrédient
+            </button>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ingrédients *</label>
-            <select
-              name="ingredients"
-              multiple
-              value={form.ingredients}
-              onChange={handleChange}
+          <div className="pt-4">
+            <button
+              type="submit"
               disabled={isLoading}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-wood-500 focus:border-wood-500 h-32"
-              required
+              className={`w-full py-3 px-4 bg-gradient-to-r from-wood-600 to-wood-700 text-white font-medium rounded-lg transition-all shadow-md hover:shadow-lg ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:from-wood-700 hover:to-wood-800'
+              }`}
             >
-              {ingredients.map(ing => (
-                <option key={ing.id} value={ing.id}>
-                  {ing.nom_ingredient} ({ing.stock} {ing.unite_mesure})
-                </option>
-              ))}
-            </select>
-            <p className="text-xs text-gray-500 mt-1">Maintenez Ctrl/Cmd pour sélectionner plusieurs ingrédients</p>
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Enregistrement...
+                </span>
+              ) : (
+                'Enregistrer les ingrédients'
+              )}
+            </button>
           </div>
-
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="disponible"
-              checked={form.disponible}
-              onChange={handleChange}
-              disabled={isLoading}
-              className="h-4 w-4 text-wood-600 focus:ring-wood-500 border-gray-300 rounded"
-            />
-            <label className="ml-2 block text-sm text-gray-700">Disponible immédiatement</label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-3 px-4 bg-gradient-to-r from-wood-600 to-wood-700 text-white font-medium rounded-lg transition-all ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:from-wood-700 hover:to-wood-800'
-            }`}
-          >
-            {isLoading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                En cours...
-              </span>
-            ) : (
-              'Créer le plat'
-            )}
-          </button>
         </form>
       </div>
     </div>
   );
 };
 
-export default CreatePlatModal;
+export default AddIngredientsModal;

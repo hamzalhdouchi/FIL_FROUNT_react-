@@ -46,7 +46,7 @@ const AddMenuModal = ({ closeModal, fetchMenus }) => {
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden modal-enter">
         <div className="bg-wood-700 text-white py-4 px-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-xl font-bold font-playfair">Ajouter un Menu</h3>
+            <h3 className="text-xl font-bold font-serif">Ajouter un Menu</h3>
             <button onClick={closeModal} className="text-white hover:text-wood-200 transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

@@ -60,7 +60,7 @@ const BonAppetitCategories = () => {
                 <i className='bx bx-restaurant text-xl text-white'></i>
               </div>
               <div>
-                <h1 className="font-bold text-xl brand-text text-wood-800">Bon Appétit</h1>
+                <h1 className="font-bold text-xl brand-text text-wood-800">Serve Quick</h1>
                 <p className="text-xs text-wood-500">Restaurant Français</p>
               </div>
             </div>

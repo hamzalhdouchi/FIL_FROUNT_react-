@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <nav className="bg-wood-800 text-white py-4">
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-playfair font-bold">GourmetTable</Link>
+        <Link to="/" className="text-2xl font-serif font-bold">GourmetTable</Link>
         
         <div className="hidden md:flex space-x-6">
           <Link to="/restaurants" className="hover:text-wood-100 transition">Restaurants</Link>

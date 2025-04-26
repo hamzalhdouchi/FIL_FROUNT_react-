@@ -75,7 +75,7 @@ const RestaurantsPage = () => {
 
     if (reservationDate > Date.now()) {
       try {
-        const response = await axios.post("http://127.0.0.1:8000/api/reservations", {
+        const response = await axios.post(`http://127.0.0.1:8000/api/reservations`, {
           ...reservationForm,
           restaurant_id,
           user_id,
@@ -118,14 +118,14 @@ const RestaurantsPage = () => {
       <section className="relative h-[40vh] bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')" }}>
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white">
-          <h1 className="text-4xl md:text-5xl font-playfair font-bold mb-4">Nos Restaurants</h1>
+          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">Nos Restaurants</h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl">Découvrez tous les restaurants disponibles pour votre prochaine expérience culinaire</p>
         </div>
       </section>
 
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-playfair font-bold text-center mb-12">Tous les Restaurants</h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">Tous les Restaurants</h2>
 
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
@@ -133,12 +133,12 @@ const RestaurantsPage = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {restaurants?.map((restaurante) => (
+              {restaurants?.filter(r => r.status === "accepted").map((restaurante) => (
                 <div key={restaurante.id} className="bg-wood-50 rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
                   <div className="relative">
                     <img
-                      src="https://plus.unsplash.com/premium_photo-1661883237884-263e8de8869b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D"
-                      alt={restaurante.nom_Restaurant}
+                    src={`http://localhost:8000/storage/${restaurante.image}`}
+                    alt={restaurante.nom_Restaurant}
                       className="w-full h-56 object-cover"
                     />
                     <div className="absolute bottom-4 left-4 bg-wood-700 text-white text-xs font-bold px-2 py-1 rounded">
@@ -149,12 +149,12 @@ const RestaurantsPage = () => {
                   <div className="p-6">
                     <div className="flex items-center mb-4">
                       <img
-                        src="https://via.placeholder.com/50"
+                        src={`http://localhost:8000/storage/${restaurante.image}`}
                         alt="Logo"
                         className="w-12 h-12 rounded-full mr-4"
                       />
                       <div>
-                        <h3 className="text-xl font-bold font-playfair">{restaurante.nom_Restaurant}</h3>
+                        <h3 className="text-xl font-bold font-serif">{restaurante.nom_Restaurant}</h3>
                         <p className="text-sm text-wood-600">{restaurante.directeur}</p>
                       </div>
                     </div>

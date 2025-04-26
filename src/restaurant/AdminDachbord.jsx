@@ -184,7 +184,7 @@ const BonAppetitDashboard = () => {
                 <i className='bx bx-restaurant text-xl'></i>
               </div>
               <div>
-                <h1 className="font-bold text-lg">Bon Appétit</h1>
+                <h1 className="font-bold text-lg">Serve Quick</h1>
                 <p className="text-xs text-wood-300">Admin Dashboard</p>
               </div>
             </div>
@@ -247,7 +247,7 @@ const BonAppetitDashboard = () => {
                 <div className="w-10 h-10 rounded-full bg-wood-600 flex items-center justify-center">
                   <i className='bx bx-restaurant text-xl'></i>
                 </div>
-                <h1 className="font-bold text-lg">Bon Appétit</h1>
+                <h1 className="font-bold text-lg">Serve Quick</h1>
               </div>
               <button id="close-sidebar" className="text-wood-300 hover:text-white">
                 <i className='bx bx-x text-2xl'></i>
@@ -609,7 +609,7 @@ const BonAppetitDashboard = () => {
           
           {/* Footer */}
           <footer className="bg-white border-t border-wood-200 py-4 px-6 text-center text-wood-600 text-sm">
-            <p>© 2025 Bon Appétit Admin Dashboard. All rights reserved.</p>
+            <p>© 2025 Serve Quick Admin Dashboard. All rights reserved.</p>
           </footer>
         </div>
       </div>

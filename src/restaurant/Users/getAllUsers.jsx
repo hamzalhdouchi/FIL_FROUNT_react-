@@ -39,17 +39,17 @@ const GetUsers = () => {
       console.error('Erreur lors de la récupération des utilisateurs:', err);
       setError(err.response?.data?.message || 'Échec du chargement des utilisateurs.');
 
-      if (err.response?.status === 401) {
-        Swal.fire({
-          title: 'Session expirée',
-          text: 'Votre session a expiré. Veuillez vous reconnecter.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        }).then(() => {
-          sessionStorage.removeItem('token');
-          window.location.href = '/login';
-        });
-      }
+      // if (err.response?.status === 401) {
+      //   Swal.fire({
+      //     title: 'Session expirée',
+      //     text: 'Votre session a expiré. Veuillez vous reconnecter.',
+      //     icon: 'error',
+      //     confirmButtonText: 'OK',
+      //   }).then(() => {
+      //     sessionStorage.removeItem('token');
+      //     window.location.href = '/login';
+      //   });
+      // }
     } finally {
       setLoading(false);
     }

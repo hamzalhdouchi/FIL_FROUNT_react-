@@ -3,7 +3,7 @@ export default function About() {
       <section id="about" className="py-16 bg-wood-100">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-playfair font-bold mb-8">À Propos de GourmetTable</h2>
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-8">À Propos de GourmetTable</h2>
             <p className="text-lg mb-6">
               GourmetTable est né d'une passion pour la gastronomie et d'une volonté de simplifier l'expérience de
               réservation de restaurants pour les amateurs de bonne cuisine.

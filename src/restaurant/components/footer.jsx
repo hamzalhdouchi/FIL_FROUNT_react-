@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-playfair font-bold mb-4">GourmetTable</h3>
+            <h3 className="text-xl font-serif font-bold mb-4">GourmetTable</h3>
             <p className="mb-4">
               La meilleure façon de découvrir et réserver dans les restaurants de qualité près de chez vous.
             </p>
@@ -17,7 +17,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-playfair font-bold mb-4">Liens Rapides</h3>
+            <h3 className="text-xl font-serif font-bold mb-4">Liens Rapides</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="hover:text-wood-100 transition">
@@ -48,7 +48,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-playfair font-bold mb-4">Légal</h3>
+            <h3 className="text-xl font-serif font-bold mb-4">Légal</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="#" className="hover:text-wood-100 transition">
@@ -74,7 +74,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-playfair font-bold mb-4">Newsletter</h3>
+            <h3 className="text-xl font-serif font-bold mb-4">Newsletter</h3>
             <p className="mb-4">
               Inscrivez-vous pour recevoir nos offres spéciales et découvrir les nouveaux restaurants.
             </p>

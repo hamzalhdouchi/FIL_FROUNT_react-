@@ -8,6 +8,7 @@ import Header from "./components/layout/header"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import AddIngredientForm from "./components/test"
+import Swal from "sweetalert2"
 
 export default function Home() {
 
@@ -15,24 +16,45 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
 
-   useEffect( () => {
+  useEffect(() => {
     const fetchData = async () => {
-      try{
-
-        const response = await axios.get(`http://127.0.0.1:8000/api/restaurants`);
-        const limitedRestaurants = response.data.original.data.data.slice(0, 3);
-        setRestaurants(limitedRestaurants)
-        sessionStorage.setItem('restaurant', JSON.stringify(limitedRestaurants));
+      try {
+        const userData = sessionStorage.getItem('user');
+        if (!userData) {
+          window.location.href = '/';
+          return;
+        }
+  
+        const user = JSON.parse(userData);
+        const role = user?.role_id;
+  
+        if (role !== 1) {
+          Swal.fire({
+            icon: "error",
+            title: "Accès refusé",
+            text: "Vous n'avez pas le rôle requis pour accéder à cette page.",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+          window.location.href = '/';
+          return;
+        }
+  
+        const { data } = await axios.get("http://127.0.0.1:8000/api/restaurants");
+        const restaurants = data?.original?.data?.data?.slice(0, 3) || [];
+  
+        setRestaurants(restaurants);
+        sessionStorage.setItem('restaurant', JSON.stringify(restaurants));
+      } catch (err) {
+        console.error('Erreur lors de la récupération des restaurants:', err);
+      } finally {
         setLoading(false);
-      }catch(err)
-      {
-        console.log('Erreur lors de la récupération des restaurants:', err);
-        setLoading(false);
-
-      };
-    }
+      }
+    };
+  
     fetchData();
-  },[]);
+  }, []);
+  
 
   
   if (loading) {
@@ -49,8 +71,7 @@ export default function Home() {
     <main>
       <Header />
       <Hero />
-      <AddIngredientForm />
-      <Restaurants restaurants={restaurants}/>
+        <Restaurants restaurants={restaurants}/>
       <About />
       <Reviews />
       <Contact />

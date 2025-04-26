@@ -30,7 +30,7 @@ const RestaurantMenuUser = () => {
     phone: '',
     date: '',
     time: '',
-    guests: '',
+    guests: parseInt(0),
     special_requests: '',
     preorderCheck: false
   });
@@ -130,7 +130,6 @@ const RestaurantMenuUser = () => {
 
   const closeToast = () => setShowToast(false);
 
-  // Dish handlers
   const addDishToSelection = () => {
     if (!currentDish) return;
 
@@ -167,12 +166,11 @@ const RestaurantMenuUser = () => {
     setSelectedDishes(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Form handlers
   const handleReservationChange = (e) => {
     const { name, value, type, checked } = e.target;
     setReservationForm(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: name === 'guests' ? parseInt(value, 10) : (type === 'checkbox' ? checked : value)
     }));
   };
 
@@ -265,7 +263,7 @@ const RestaurantMenuUser = () => {
             <div className="mb-4">
                 <span className="inline-block px-4 py-1 bg-wood-700 text-white text-sm font-medium rounded-full">Maroc</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-playfair font-bold mb-4">Serve Quick</h1>
+            <h1 className="text-4xl md:text-6xl font-serif font-bold mb-4">Serve Quick</h1>
             <p className="text-xl md:text-2xl mb-8 max-w-2xl">Une cuisine française raffinée dans un cadre élégant. Spécialités de fruits de mer et vins fins.</p>
             <div className="flex flex-wrap justify-center gap-4">
                 <button 
@@ -348,7 +346,7 @@ const RestaurantMenuUser = () => {
                 
                 return (
                 <div key={category.id} className="menu-category mb-16">
-                    <h2 className="text-3xl md:text-4xl font-playfair font-bold text-center mb-12">{category.mon_categorie}</h2>
+                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">{category.mon_categorie}</h2>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {categoryMenus.map(menu => (
@@ -360,7 +358,7 @@ const RestaurantMenuUser = () => {
                         </div>
                         <div className="flex-1">
                             <div className="flex justify-between items-start mb-2">
-                                <h3 className="text-xl font-bold font-playfair">{menu.nom_plat}</h3>
+                                <h3 className="text-xl font-bold font-serif">{menu.nom_plat}</h3>
                                 <span className="font-semibold text-wood-700">{menu.prix}€</span>
                             </div>
 
@@ -415,7 +413,7 @@ const RestaurantMenuUser = () => {
         
         <section className="py-16 bg-wood-100">
             <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-playfair font-bold mb-6">Réservez votre table</h2>
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">Réservez votre table</h2>
             <p className="text-wood-700 mb-8 max-w-2xl mx-auto">Pour une expérience gastronomique inoubliable, réservez votre table dès maintenant. Nous vous accueillerons avec plaisir pour vous faire découvrir notre cuisine raffinée.</p>
             <div className="flex flex-wrap justify-center gap-4">
                 <button 

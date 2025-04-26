@@ -36,7 +36,7 @@ export default function Reservation() {
   return (
     <section id="reservation" className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-playfair font-bold text-center mb-12">Réserver une Table</h2>
+        <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">Réserver une Table</h2>
 
         <div className="max-w-2xl mx-auto bg-wood-50 rounded-lg shadow-lg p-8">
           <form onSubmit={handleSubmit}>

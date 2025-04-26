@@ -17,13 +17,29 @@ import BonAppetitDashboards from './restaurant/restaurantDashbord.jsx';
 import AddCategoryModal from './restaurant/components/CategoreForm.jsx';
 import AddIngredientsModal from './restaurant/components/test.jsx';
 import CreatePlatModal from './restaurant/components/formPlates.jsx';
+import CommandDash from './restaurant/components/CommandDach.jsx';
+import PlatDash from './restaurant/components/platDash.jsx';
+import CategorieDash from './restaurant/components/categorieDich.jsx';
+import IngredientsDish from './restaurant/components/ingridiantDach.jsx';
+import DashboardRestaurant from './restaurant/restaurantDashbord.jsx';
+import TableModal from './restaurant/components/formTable.jsx';
+import TableDash from './restaurant/components/TableDach.jsx';
+import ReservationDash from './restaurant/components/ReservationDach.jsx';
+import AperçuStats from './restaurant/components/Statisitque.jsx';
 
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path='/test' element={<CreatePlatModal />} />
+      {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/commandes" element={<CommandDash />} />
+        <Route path="/reservations" element={<ReservationDash />} />
+        <Route path="/plats" element={<PlatDash />} />
+        <Route path="/ingredients" element={<IngredientsDish />} />
+        <Route path="/categories" element={<CategorieDash />} />
+        <Route path="/table" element={<TableDash />} />
+        <Route path="/Dachboard/Restaurants" element={<AperçuStats />} />
         <Route path="/" element={<AuthPage />} />
         <Route path="/dashboard" element={<BonAppetitDashboard />} />
         <Route path="/get" element={<GetUsers/>} />

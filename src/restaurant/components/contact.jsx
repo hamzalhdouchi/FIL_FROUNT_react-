@@ -22,7 +22,7 @@ export default function Contact() {
   return (
     <section id="contact" className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-playfair font-bold text-center mb-12">Contactez-nous</h2>
+        <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">Contactez-nous</h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div>
@@ -90,7 +90,7 @@ export default function Contact() {
 
           <div className="flex flex-col justify-center">
             <div className="mb-8">
-              <h3 className="text-2xl font-playfair font-bold mb-4">Informations de Contact</h3>
+              <h3 className="text-2xl font-serif font-bold mb-4">Informations de Contact</h3>
               <p className="text-wood-700 mb-6">
                 N'hésitez pas à nous contacter pour toute question ou suggestion. Notre équipe est à votre disposition
                 pour vous aider.
@@ -117,7 +117,7 @@ export default function Contact() {
             </div>
 
             <div>
-              <h3 className="text-2xl font-playfair font-bold mb-4">Suivez-nous</h3>
+              <h3 className="text-2xl font-serif font-bold mb-4">Suivez-nous</h3>
               <div className="flex space-x-4">
                 <a
                   href="#"

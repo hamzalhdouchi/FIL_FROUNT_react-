@@ -35,6 +35,8 @@ module.exports = {
         sans: ['Poppins', 'sans-serif'],
         serif: ['Lora', 'serif'],
         brand: ['Montserrat', 'sans-serif'],
+        layfair: ['"Playfair Display"', 'serif'], 
+        
       },
     },
   },

@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from './components/layout/header.jsx';
 import TableReservationModal from './components/FormReservation.jsx';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import dayjs from 'dayjs';
-
 
 const ReservationsPage = () => {
   const [activeTab, setActiveTab] = useState('upcoming');
@@ -19,6 +18,7 @@ const ReservationsPage = () => {
   const [selectedDishes, setSelectedDishes] = useState([]);
   const [editingReservation, setEditingReservation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   
   const [reservationForm, setReservationForm] = useState({
     name: '',
@@ -81,7 +81,6 @@ const ReservationsPage = () => {
   useEffect(() => {
     fetchReservations();
     setIsLoading(false);
-
   }, [fetchReservations]);
 
   const handleCancel = async (reservationId) => {
@@ -98,31 +97,30 @@ const ReservationsPage = () => {
 
     if (!result.isConfirmed) return;
 
-    
-  try {
-    const status = 'Annulée';
-    const token = sessionStorage.getItem('token');
+    try {
+      const status = 'Annulée';
+      const token = sessionStorage.getItem('token');
 
-    await axios.put(
-      `http://127.0.0.1:8000/api/reservations/${reservationId}/status`, 
-      { status },  
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+      await axios.put(
+        `http://127.0.0.1:8000/api/reservations/${reservationId}/status`, 
+        { status },  
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    setReservations(prev => ({
-      ...prev,
-      upcoming: prev.upcoming.filter(res => res.id !== reservationId),
-      cancelled: [...prev.cancelled, 
-        prev.upcoming.find(res => res.id === reservationId)]
-    }));
+      setReservations(prev => ({
+        ...prev,
+        upcoming: prev.upcoming.filter(res => res.id !== reservationId),
+        cancelled: [...prev.cancelled, 
+          prev.upcoming.find(res => res.id === reservationId)]
+      }));
 
-    Swal.fire({
-      icon: "success",
-      title: "Réservation annulée",
-      showConfirmButton: false,
-      timer: 1500
-    });
-  } catch (error) {
+      Swal.fire({
+        icon: "success",
+        title: "Réservation annulée",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    } catch (error) {
       console.error('Cancel error:', error);
       Swal.fire({
         icon: "error",
@@ -234,7 +232,7 @@ const ReservationsPage = () => {
       cancelButtonText: 'Non'
     }).then(async (result) => {  
       if (!result.isConfirmed) return;  
-  
+
       try {
         const status = 'En attente de confirmation';
         const token = sessionStorage.getItem('token');
@@ -269,7 +267,6 @@ const ReservationsPage = () => {
       }
     });
   };
-  
 
   const getStatusBadgeClass = (status) => {
     switch (status) {
@@ -291,31 +288,22 @@ const ReservationsPage = () => {
     }
   };
 
-  const ReservationCard = ({ reservation, type }) => {
- 
+  const handleBack = () => {
+    navigate(-1);
+  };
 
+  const ReservationCard = ({ reservation, type }) => {
     return (
       <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform hover:scale-[1.01]">
+        <button className='h-11 w-52 bg-slate-950 text-white' onClick={handleBack}>
+          Retour
+        </button>
         <div className="p-6">
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex-shrink-0">
-              <div className="w-24 h-24 rounded-lg overflow-hidden">
-                <img 
-                  src="https://img.freepik.com/photos-gratuite/restaurant-interieur_1127-3394.jpg?semt=ais_hybrid&w=740"
-                  alt={reservation.restaurantName} 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null; 
-                    e.target.src = '/restaurant-placeholder.jpg';
-                  }}
-                />
-              </div>
-            </div>
-
             <div className="flex-grow">
               <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
                 <div>
-                  <h2 className="text-xl font-bold">{reservation.restaurantName}</h2>
+                  <h2 className="text-xl font-serif">{reservation.restaurantName}</h2>
                   <p className="text-gray-600">Réservation #{reservation.id}</p>
                 </div>
                 <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${getStatusBadgeClass(reservation.status)}`}>
@@ -332,7 +320,7 @@ const ReservationsPage = () => {
                   <p className="font-medium">{reservation.date}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Personnes</p>
+                  <p className="text-sm font-serif text-gray-500">Personnes</p>
                   <p className="font-medium">{reservation.guests}</p>
                 </div>
                 <div>
@@ -351,7 +339,7 @@ const ReservationsPage = () => {
 
               {type === 'upcoming' && (
                 <div className="mb-4">
-                  <h3 className="text-sm font-medium text-gray-800 mb-1">Demandes spéciales</h3>
+                  <h3 className="text-sm font-medium font-serif text-gray-800 mb-1">Demandes spéciales</h3>
                   <p className="text-gray-600">
                     {reservation.special_requests || 'Aucune demande particulière'}
                   </p>
@@ -361,7 +349,7 @@ const ReservationsPage = () => {
               {type === 'upcoming' && reservation.preorderedDishes?.length > 0 && (
                 <div className="mb-4">
                   <div className="flex items-center">
-                    <h3 className="text-sm font-medium text-gray-800 mr-2">Plats précommandés</h3>
+                    <h3 className="text-sm font-medium font-serif text-gray-800 mr-2">Plats précommandés</h3>
                     <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
                       {reservation.preorderedDishes.length} plats
                     </span>
@@ -381,14 +369,14 @@ const ReservationsPage = () => {
                   <>
                     <button 
                       onClick={() => handleModify(reservation)}
-                      className="bg-wood-500 hover:bg-wood-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
+                      className="bg-wood-500 hover:bg-wood-600 font-serif text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
                     >
                       <i className="bx bx-edit mr-2"></i>
                       Modifier
                     </button>
                     <button 
                       onClick={() => handleCancel(reservation.id)}
-                      className="bg-white hover:bg-red-50 text-red-600 border border-red-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
+                      className="bg-white hover:bg-red-50 font-serif text-red-600 border border-red-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
                     >
                       <i className="bx bx-x mr-2"></i>
                       Annuler
@@ -400,14 +388,14 @@ const ReservationsPage = () => {
                   <>
                     <button 
                       onClick={() => handleReview(reservation.id)}
-                      className="bg-wood-500 hover:bg-wood-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
+                      className="bg-wood-500 hover:bg-wood-600 font-serif text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
                     >
                       <i className="bx bx-star mr-2"></i>
                       Laisser un avis
                     </button>
                     <button 
                       onClick={() => handleRebook(reservation)}
-                      className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
+                      className="bg-white hover:bg-gray-50 font-serif text-gray-700 border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
                     >
                       <i className="bx bx-calendar mr-2"></i>
                       Réserver à nouveau
@@ -418,7 +406,7 @@ const ReservationsPage = () => {
                 {type === 'cancelled' && (
                   <button 
                     onClick={() => handleRebook(reservation)}
-                    className="bg-wood-500 hover:bg-wood-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
+                    className="bg-wood-500 hover:bg-wood-600 font-serif text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
                   >
                     <i className="bx bx-calendar mr-2"></i>
                     Réserver à nouveau
@@ -501,7 +489,7 @@ const ReservationsPage = () => {
       
       <header className="bg-white border-b border-gray-200 py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-gray-900">Mes Réservations</h1>
+          <h1 className="text-3xl font-serif text-gray-900">Mes Réservations</h1>
           <p className="text-gray-600 mt-2">Gérez vos réservations passées et à venir</p>
         </div>
       </header>

@@ -1,5 +1,3 @@
-        "use client"
-
         import { useEffect, useState, useCallback, useMemo } from "react"
         import { useNavigate, useParams } from "react-router-dom"
         import Header from "./components/layout/header.jsx"
@@ -161,6 +159,7 @@
                     table_number: commande.table_number,
                     plats: commande.plat,
                     plat_id: commande.plat.id,
+                    paymentStatus: "en_coure"
                 }
                 response = await axios.post(`${API_BASE_URL}/commandes`, newCommande, config)
                 break
