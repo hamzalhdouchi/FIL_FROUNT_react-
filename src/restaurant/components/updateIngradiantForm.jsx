@@ -1,5 +1,6 @@
     import React, { useState, useEffect } from "react";
     import axios from "axios";
+import Swal from "sweetalert2";
 
     const EditIngredientModal = ({ isOpen, onClose, ingredient, onIngredientUpdated }) => {
     const [name, setName] = useState("");
@@ -7,11 +8,14 @@
     const [unit, setUnit] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [ingId, setIngId] = useState(null);
+
 
     useEffect(() => {
         if (ingredient) {
         setName(ingredient.nom_ingredient || "");
         setQuantity(ingredient.stock || "");
+        setUnit(ingredient.unite_mesure || "")
         }
     }, [ingredient]);
 
@@ -20,15 +24,26 @@
         setLoading(true);
         setError(null);
         
-
+        const ingID = ingredient.id;
+        setIngId(ingID);
+        console.log(ingID);
+        
         try {
-        const response = await axios.put(`http://localhost:8000/ingredients/${ingredient.id}`, {
+        const response = await axios.put(`http://127.0.0.1:8000/api/ingredients/${ingID}`, {
             nom_ingredient: name,
             stock: quantity,
             unite_mesure: unit,
         });
         onIngredientUpdated(response.data);
         onClose();
+        
+        Swal.fire({
+            icon: "success",
+            title: "Ingrédient modifié avec succès",
+            text: "L'ingrédient a été mis à jour avec succès.",
+            timer: 2000,
+            showConfirmButton: false,
+        });
         } catch (err) {
         console.log(err);
         setError("Une erreur est survenue. Veuillez réessayer.");

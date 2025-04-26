@@ -13,7 +13,7 @@ const OrderModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden modal-enter">w
+      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden modal-enter">
         <div className="bg-wood-700 text-white py-4 px-6">
           <div className="flex justify-between items-center">
             <h3 className="text-xl font-serif ">Réserver un Plat</h3>

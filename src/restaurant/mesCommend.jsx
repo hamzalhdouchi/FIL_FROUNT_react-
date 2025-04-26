@@ -30,15 +30,15 @@
 
         const getStatusConfig = useMemo(() => (statut) => {
             const configs = {
-            [STATUS_TYPES.EN_COURS]: {
-                badgeClass: "bg-blue-100 text-blue-800",
-                icon: "bx bx-loader-circle",
-                label: "En préparation"
-            },
             [STATUS_TYPES.EN_ATTENTE]: {
                 badgeClass: "bg-yellow-100 text-yellow-800",
                 icon: "bx bx-time",
                 label: "En attente"
+            },
+            [STATUS_TYPES.EN_COURS]: {
+                badgeClass: "bg-blue-100 text-blue-800",
+                icon: "bx bx-loader-circle",
+                label: "En préparation"
             },
             [STATUS_TYPES.ANNULEE]: {
                 badgeClass: "bg-red-100 text-red-800",
@@ -59,7 +59,6 @@
             return configs[statut] || configs.default
         }, [])
 
-        // États vides
         const emptyStates = useMemo(() => ({
             [STATUS_TYPES.EN_ATTENTE]: {
             icon: "bx-time-five",
@@ -93,12 +92,12 @@
             )
 
             const allCommandes = response.data.data 
-            
+            const CommandesTable = allCommandes.filter(cmd => cmd.CommandStatus === 'aTable');
             setCommandes({
-                [STATUS_TYPES.EN_ATTENTE]: allCommandes.filter(cmd => cmd.statut === STATUS_TYPES.EN_ATTENTE),
-                [STATUS_TYPES.EN_COURS]: allCommandes.filter(cmd => cmd.statut === STATUS_TYPES.EN_COURS),
-                [STATUS_TYPES.TERMINEE]: allCommandes.filter(cmd => cmd.statut === STATUS_TYPES.TERMINEE),
-                [STATUS_TYPES.ANNULEE]: allCommandes.filter(cmd => cmd.statut === STATUS_TYPES.ANNULEE),
+                [STATUS_TYPES.EN_ATTENTE]: CommandesTable.filter(cmd => cmd.statut === STATUS_TYPES.EN_ATTENTE),
+                [STATUS_TYPES.EN_COURS]: CommandesTable.filter(cmd => cmd.statut === STATUS_TYPES.EN_COURS),
+                [STATUS_TYPES.TERMINEE]: CommandesTable.filter(cmd => cmd.statut === STATUS_TYPES.TERMINEE),
+                [STATUS_TYPES.ANNULEE]: CommandesTable.filter(cmd => cmd.statut === STATUS_TYPES.ANNULEE),
             })
             } catch (error) {
             console.error("Error fetching commandes:", error)
@@ -169,7 +168,7 @@
                 const user_id = user?.id
                 
                 if (!token) {
-                    const url = `http://localhost:3000/menu/${restaurant_id}/table/${table_id}`
+                    const url = `http://localhost:3000/commandes/${restaurant_id}/table/${table_id}`
                     sessionStorage.setItem('redirect_url', url)
                     navigate('/')
                     return
@@ -565,13 +564,26 @@
             <div className="min-h-screen bg-gray-50">
             <Header />
 
-            <header className="bg-white border-b border-gray-200 py-8">
-                <div className="container mx-auto px-4">
-                <h1 className="text-3xl font-bold text-gray-900">Mes Commandes</h1>
-                <p className="text-gray-600 mt-2">
-                    Suivez vos commandes en cours et consultez votre historique
+            <header className="bg-white border-b border-gray-200 py-8 relative">
+            <div className="absolute top-8 left-6 lg:left-10">
+                <button 
+                onClick={() => navigate(-1)}
+                className="text-wood-600 hover:text-wood-800 transition-all duration-300 flex items-center group"
+                aria-label="Retour à la page précédente"
+                >
+                <i className="bx bx-chevron-left text-2xl md:text-3xl mr-1 group-hover:-translate-x-1 transition-transform duration-300"></i>
+                <span className="font-medium text-lg md:text-xl">Retour</span>
+                </button>
+            </div>
+            
+            <div className="container mx-auto px-4 pt-2 text-center">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif tracking-tight">
+                Mes Commandes
+                </h1>
+                <p className="text-gray-600 mt-3 text-lg max-w-2xl mx-auto">
+                Suivez vos commandes en cours et consultez votre historique
                 </p>
-                </div>
+            </div>
             </header>
 
             <main className="container mx-auto px-4 py-8">

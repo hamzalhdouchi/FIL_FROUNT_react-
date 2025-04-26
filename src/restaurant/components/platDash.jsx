@@ -290,6 +290,7 @@ const PlatDash = () => {
             <table className="min-w-full divide-y divide-wood-200">
               <thead className="bg-wood-50">
                 <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Plate</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Nom</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Description</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Prix</th>
@@ -298,37 +299,49 @@ const PlatDash = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-wood-200">
-                {filteredPlats.map((plat) => (
-                  <tr key={plat.id}>
-                    <td className="px-6 py-4 text-sm font-medium text-wood-900">{plat.nom_plat}</td>
-                    <td className="px-6 py-4 text-sm text-wood-700 max-w-xs truncate">{plat.description}</td>
-                    <td className="px-6 py-4 text-sm text-wood-700">{plat.prix?.toFixed(2)} €</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        plat.disponible ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                      }`}>
-                        {plat.disponible ? "Disponible" : "Indisponible"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <button onClick={() => handleEditClick(plat)}>
-                          <i className="bx bx-edit"></i>
-                        </button>
-                        <button
-                          onClick={() => handleChangeStatus(plat.id, plat.disponible)}
-                          className={plat.disponible ? "text-red-600 hover:text-red-900" : "text-green-600 hover:text-green-900"}
-                        >
-                          <i className={`bx ${plat.disponible ? "bx-x" : "bx-check"}`}></i>
-                        </button>
-                        <button onClick={() => handleDelete(plat.id)} className="text-red-600 hover:text-red-900">
-                          <i className="bx bx-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+  {filteredPlats.map((plat) => (
+    <tr key={plat.id}>
+      <td className="px-6 py-4">
+        <img
+          src={`http://localhost:8000/storage/${plat.image}`}
+          alt={plat.nom_plat}
+          className="w-12 h-12 rounded object-cover"
+        />
+      </td>
+      <td className="px-6 py-4 text-sm font-medium text-wood-900">{plat.nom_plat}</td>
+      <td className="px-6 py-4 text-sm text-wood-700 max-w-xs truncate">{plat.description}</td>
+      <td className="px-6 py-4 text-sm text-wood-700">{plat.prix?.toFixed(2)} €</td>
+      <td className="px-6 py-4">
+        <span
+          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+            plat.disponible ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+          }`}
+        >
+          {plat.disponible ? "Disponible" : "Indisponible"}
+        </span>
+      </td>
+      <td className="px-6 py-4 text-sm font-medium">
+        <div className="flex space-x-2">
+          <button onClick={() => handleEditClick(plat)}>
+            <i className="bx bx-edit"></i>
+          </button>
+          <button
+            onClick={() => handleChangeStatus(plat.id, plat.disponible)}
+            className={
+              plat.disponible ? "text-red-600 hover:text-red-900" : "text-green-600 hover:text-green-900"
+            }
+          >
+            <i className={`bx ${plat.disponible ? "bx-x" : "bx-check"}`}></i>
+          </button>
+          <button onClick={() => handleDelete(plat.id)} className="text-red-600 hover:text-red-900">
+            <i className="bx bx-trash"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       
             </table>
 
@@ -343,12 +356,12 @@ const PlatDash = () => {
       {/* Modale création */}
       {showCreateModal && (
         <CreatePlatModal
-          closeModal={() => setShowCreateModal(false)}
-          handleSubmitDish={() => {
-            fetchPlats();
-            setShowCreateModal(false);
-          }}
-        />
+        closeModal={() => setShowCreateModal(false)}
+        
+        handleSubmitDish={() => {
+          setShowCreateModal(false);}}
+        fetchPlats={fetchPlats}
+      />
       )}
 
       {/* Modale édition */}

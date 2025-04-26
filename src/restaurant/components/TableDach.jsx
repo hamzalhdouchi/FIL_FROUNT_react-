@@ -14,11 +14,13 @@ const TableDash = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedTable, setSelectedTable] = useState(null);
   const [restaurant_id, setRestaurant_id] = useState(0);
+  const [restaurant_idRT, setRestaurant_idR] = useState(0);
 
   const fetchTables = async () => {
     const restaurant = JSON.parse(sessionStorage.getItem('restaurant'));  
   const restaurant_idR = restaurant.id;
-  setRestaurant_id(restaurant)
+  setRestaurant_id(restaurant);
+  setRestaurant_idR(restaurant_idR);
     try {
       setLoading(true);
 
@@ -55,7 +57,7 @@ const TableDash = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/api/restaurants/${restaurant_id}/tables/${id}`);
+        await axios.delete(`http://localhost:8000/api/restaurants/${restaurant_idRT}/tables/${id}`);
         setTables((prev) => prev.filter((table) => table.id !== id));
         Swal.fire({
           title: "Supprimé !",
@@ -217,6 +219,7 @@ const TableDash = () => {
                 <i className="bx bx-plus mr-2"></i> Ajouter une Table
               </button>
             </div>
+
 
             {/* Tables Table */}
             <div className="bg-white rounded-lg shadow-sm border border-wood-100 overflow-hidden">

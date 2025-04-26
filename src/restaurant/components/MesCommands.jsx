@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-const MesCommandesButton = ({ restaurant_id, table_id }) => {
+const MesCommandesButton = ({ restaurant_id, table_id, openTableReservationModal }) => {
   const navigate = useNavigate();
 
   const handleNavigation = () => {
@@ -20,8 +20,8 @@ const MesCommandesButton = ({ restaurant_id, table_id }) => {
         >
           Mes Commandes
         </button>
-      </div>
-    </div>
+        </div>
+        </div>
   </section>
   );
 };

@@ -5,6 +5,7 @@ import TableReservationModal from './components/FormReservation.jsx';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import dayjs from 'dayjs';
+import { ChevronLeft } from 'lucide-react';
 
 const ReservationsPage = () => {
   const [activeTab, setActiveTab] = useState('upcoming');
@@ -295,9 +296,6 @@ const ReservationsPage = () => {
   const ReservationCard = ({ reservation, type }) => {
     return (
       <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform hover:scale-[1.01]">
-        <button className='h-11 w-52 bg-slate-950 text-white' onClick={handleBack}>
-          Retour
-        </button>
         <div className="p-6">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex-grow">
@@ -487,12 +485,45 @@ const ReservationsPage = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <header className="bg-white border-b border-gray-200 py-8">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-serif text-gray-900">Mes Réservations</h1>
-          <p className="text-gray-600 mt-2">Gérez vos réservations passées et à venir</p>
+      <header className="relative bg-gradient-to-r from-wood-50 to-white py-10 border-b border-wood-200 shadow-sm">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-wood-400 to-wood-600"></div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div className="flex items-start">
+            <button
+              onClick={() => navigate(-1)}
+              className="group flex items-center text-wood-700 hover:text-wood-900 transition-all duration-300 mr-4 -ml-2 p-2 rounded-full hover:bg-wood-100"
+              aria-label="Retour à la page précédente"
+            >
+              <span className="flex items-center justify-center bg-wood-100 group-hover:bg-wood-200 rounded-full p-1.5 transition-all duration-300">
+                <ChevronLeft className="h-5 w-5 group-hover:-translate-x-0.5 transition-transform duration-300" />
+              </span>
+              <span className="font-medium ml-1 text-lg">Retour</span>
+            </button>
+          </div>
+
+          <div className="mt-6 md:mt-0 text-center md:text-right">
+            <div className="inline-block px-3 py-1 bg-wood-100 text-wood-800 text-xs font-medium rounded-full mb-2">
+              Espace Personnel
+            </div>
+          </div>
         </div>
-      </header>
+
+        <div className="mt-4 md:mt-6 text-center md:text-left max-w-2xl">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-wood-900 tracking-tight">
+            Mes Réservations
+          </h1>
+          <div className="h-1 w-20 bg-wood-500 mx-auto md:mx-0 my-4 rounded-full"></div>
+          <p className="text-wood-700 text-lg md:text-xl mt-2 font-light">
+            Consultez et gérez vos réservations passées et à venir en toute simplicité
+          </p>
+        </div>
+
+      </div>
+
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-wood-200 to-transparent"></div>
+    </header>
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8 border-b border-gray-200">

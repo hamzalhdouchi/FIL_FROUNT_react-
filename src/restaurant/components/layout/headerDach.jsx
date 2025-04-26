@@ -28,7 +28,7 @@ const HeaderDach = () => {
                 <i className="bx bx-user text-xl text-wood-600"></i>
               </div>
               <div className="hidden md:block">
-                <p className="text-sm font-medium text-wood-800">Chef {user.nom_utilisateur}</p>
+                <p className="text-sm font-medium text-wood-800">{user.nom_utilisateur}</p>
                 <p className="text-xs text-wood-500">{user.email}</p>
               </div>
             </div>

@@ -26,6 +26,8 @@ import TableModal from './restaurant/components/formTable.jsx';
 import TableDash from './restaurant/components/TableDach.jsx';
 import ReservationDash from './restaurant/components/ReservationDach.jsx';
 import AperçuStats from './restaurant/components/Statisitque.jsx';
+import CommandesPageLivr from './restaurant/mesCommandeLivr.jsx';
+import LivreurDash from './restaurant/livreurDach.jsx';
 
 
 const App = () => {
@@ -33,6 +35,7 @@ const App = () => {
     <Router>
       <Routes>
       {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/Livreur" element={<LivreurDash />} />
         <Route path="/commandes" element={<CommandDash />} />
         <Route path="/reservations" element={<ReservationDash />} />
         <Route path="/plats" element={<PlatDash />} />
@@ -52,6 +55,7 @@ const App = () => {
         <Route path="/BonAppetitCategories" element={<BonAppetitCategories/>} />
         <Route path="/home" element={<Home />} />
         <Route path="/Commandes/:restaurant_id/table/:table_id" element={<CommandesPage />} />
+        <Route path="/Livraisons/:restaurant_id" element={<CommandesPageLivr />} />
         <Route path="/BonAppetitDashboard" element={<BonAppetitDashboards />} />
         <Route path="*"lement={<Page404 />} />
 

@@ -47,14 +47,14 @@ const RestaurantMenuClient = () => {
         if (token === null) {
           [menuResponse, categoryResponse] = await Promise.all([
             axios.get(`http://127.0.0.1:8000/api/restaurants/${restaurant_id}/menus`),
-            axios.get('http://127.0.0.1:8000/api/categories'),
+            axios.get(`http://127.0.0.1:8000/api/categories/${restaurant_id}`),
           ]);
         } else {
           [menuResponse, categoryResponse] = await Promise.all([
             axios.get(`http://127.0.0.1:8000/api/restaurants/${restaurant_id}/menus`, {
               headers: { Authorization: `Bearer ${token}` }
             }),
-            axios.get('http://127.0.0.1:8000/api/categories', {
+            axios.get(`http://127.0.0.1:8000/api/categories/${restaurant_id}`, {
               headers: { Authorization: `Bearer ${token}` }
             }),
           ]);
@@ -174,10 +174,11 @@ const RestaurantMenuClient = () => {
     prixTotal: totalPrix,
     restaurant_id: parseInt(restaurant_id),
     table_number: parseInt(table_id),  
+    CommandStatus: 'aTable',
     plats: selectedplatees.map(plate => ({
       plat_id: plate.id,
       quantite: parseInt(plate.quantity),
-      notes: plate.notes
+      notes: plate.notes,
     }))
   };
   console.log(commandeData);
@@ -239,14 +240,14 @@ const RestaurantMenuClient = () => {
           <div className="mb-4">
             <span className="inline-block px-4 py-1 bg-wood-700 text-white text-sm font-medium rounded-full">Maroc</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-serif font-bold mb-4">Serve Quick</h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-2xl">Une cuisine française raffinée dans un cadre élégant. Spécialités de fruits de mer et vins fins.</p>
+          <h1 className="text-4xl md:text-6xl font-layfair font-bold mb-4">Serve Commandes</h1>
+          <p className="text-xl font-layfair md:text-2xl mb-8 max-w-2xl">  Commandez directement depuis votre table et profitez d'un service rapide et attentionné.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <button 
-              onClick={openTableReservationModal}
+              onClick={() => setShowOrderSummary(false)}
               className="bg-wood-500 hover:bg-wood-600 text-white px-6 py-3 rounded-full text-sm font-medium transition-colors"
             >
-              Réserver une table
+              Votre Commande
             </button>
           </div>
         </div>
@@ -389,6 +390,8 @@ const RestaurantMenuClient = () => {
           </button>
         </div>
       )}
+
+      
 
       <OrderModal
         showModal={showplateModal}

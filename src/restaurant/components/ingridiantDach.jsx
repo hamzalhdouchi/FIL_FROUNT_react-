@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import IngredientsModal from "./FormeIngrediant";
 import EditIngredientModal from "./updateIngradiantForm"; // Import du modal d'édition
 import { Link } from "react-router-dom";
+import HeaderDach from "./layout/headerDach";
 
 const IngredientsDish = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -203,7 +204,7 @@ const IngredientsDish = () => {
 
       {/* Main content */}
       <div className="flex-1 md:ml-64">
-        <HeaderDech />
+        <HeaderDach />
   
     <section id="ingredients" className="m-8">
       <div className="flex justify-between items-center mb-4">

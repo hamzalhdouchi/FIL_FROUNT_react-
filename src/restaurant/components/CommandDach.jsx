@@ -12,6 +12,9 @@ const CommandDash = () => {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedCommande, setSelectedCommande] = useState(null);
   const [newStatut, setNewStatut] = useState("");
+    const [restaurant_id, setRestaurant_id] = useState(0);
+    const [restaurant_idRT, setRestaurant_idR] = useState(0);
+  
 
   useEffect(() => {
     fetchCommandes();
@@ -19,7 +22,12 @@ const CommandDash = () => {
 
   const fetchCommandes = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/commandes/restaurant/3");
+
+      const restaurant = JSON.parse(sessionStorage.getItem('restaurant'));  
+      const restaurant_idR = restaurant.id;
+      setRestaurant_id(restaurant);
+      setRestaurant_idR(restaurant_idR);
+      const response = await axios.get(`http://localhost:8000/api/commandes/restaurant/${restaurant_idR}`);
       setCommandes(response.data.data);
     } catch (error) {
       console.error("Erreur lors du chargement des commandes :", error);
