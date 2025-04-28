@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 
 const HeaderDach = () => {
-  const [user, setUser] = useState(null); // Initialize with null or an empty object if preferred
+  const [user, setUser] = useState(null); 
 
+  const token = sessionStorage.getItem('token');
+
+  if (!token) {
+    window.location.href('/')
+  }
   useEffect(() => {
     const users = JSON.parse(sessionStorage.getItem('user'));
     if (users) {
       setUser(users);
     }
-  }, []); // Empty dependency array means this runs once when the component mounts
-
+  }, []); 
   if (!user) {
-    return <div>Loading...</div>; // Optionally, show a loading state until user data is available
+    return <div>Loading...</div>;
   }
 
   return (

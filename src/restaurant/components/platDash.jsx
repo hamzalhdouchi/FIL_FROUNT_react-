@@ -143,10 +143,7 @@ const PlatDash = () => {
      
         <nav className="mt-6">
           <div className="px-4 mb-2 text-xs uppercase text-wood-400 font-semibold">Principal</div>
-          <div  className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-            <i className="bx bxs-dashboard text-xl mr-3"></i>
-            <span>Tableau de Bord</span>
-          </div>
+        
           <Link to="/commandes" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
             <i className="bx bxs-receipt text-xl mr-3"></i>
             <span>Gestion des Commandes</span>
@@ -168,7 +165,7 @@ const PlatDash = () => {
           <span>Gestion des Categories</span>
           </Link>
           <Link to="/table" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-          <i className="fa fa-table text-xl mr-3"></i>
+          <i className="bx bx-chair text-xl mr-3"></i>
           <span>Gestion des Table</span>
           </Link>
 
@@ -202,10 +199,7 @@ const PlatDash = () => {
 
        <nav className="mt-6">
           <div className="px-4 mb-2 text-xs uppercase text-wood-400 font-semibold">Principal</div>
-          <div  className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-            <i className="bx bxs-dashboard text-xl mr-3"></i>
-            <span>Tableau de Bord</span>
-          </div>
+        
           <Link to="/commandes" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
             <i className="bx bxs-receipt text-xl mr-3"></i>
             <span>Gestion des Commandes</span>
@@ -214,11 +208,11 @@ const PlatDash = () => {
             <i className="bx bxs-calendar-check text-xl mr-3"></i>
             <span>Gestion des Réservations</span>
           </Link>
-          <Link to="/plats" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
+          <Link to="/plats" className="flex items-center px-4 py-3 text-wood-100 bg-wood-700">
             <i className="bx bxs-bowl-hot text-xl mr-3"></i>
             <span>Gestion des Plats</span>
           </Link>
-          <Link to="/ingredients" className="flex items-center px-4 py-3 text-wood-100 bg-wood-700">
+          <Link to="/ingredients" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
             <i className="bx bxs-basket text-xl mr-3"></i>
             <span>Gestion des Ingrédients</span>
           </Link>
@@ -227,7 +221,7 @@ const PlatDash = () => {
           <span>Gestion des Categories</span>
           </Link>
           <Link to="/table" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-          <i className="fa fa-table text-xl mr-3"></i>
+          <i className="bx bx-chair text-xl mr-3"></i>
           <span>Gestion des Table</span>
           </Link>
 

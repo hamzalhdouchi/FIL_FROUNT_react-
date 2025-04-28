@@ -74,7 +74,7 @@ const RestaurantManagement = () => {
 
   const handleButtonDelete = async (restaurantId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/restaurants/${restaurantId}`);
+      await axios.delete(`http://127.0.0.1:8000/api/restaurants/${restaurantId}/accepted`);
       Swal.fire({
         title: "Succès!",
         text: "Restaurant supprimé avec succès.",
@@ -104,7 +104,7 @@ const RestaurantManagement = () => {
 
       {!loading && !error && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {restaurants.map((restaurant) => (
+          {restaurants.filter(res => res.status = 'accepted').map((restaurant) => (
             <div key={restaurant.id} className="bg-white rounded-xl shadow-md border border-wood-100 overflow-hidden">
               <div className="h-40 bg-wood-600 relative">
                 <img 

@@ -26,6 +26,7 @@ const RestaurantMenuClient = () => {
   const [showTableModal, setShowTableModal] = useState(false);
   const [currentDish, setCurrentDish] = useState(null);
   const [user_id, setUser] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   
   const [reservationForm, setReservationForm] = useState({
     name: '',
@@ -73,7 +74,6 @@ const RestaurantMenuClient = () => {
           }),
         ]);
       }
-    console.log(menuResponse);
     
       const allPlates = [];
       menuResponse.data.data.menu.forEach(menu => {
@@ -218,34 +218,6 @@ const RestaurantMenuClient = () => {
     }
   }, [selectedplatees, restaurant_id]);
 
-  const addDishToSelection = useCallback(() => {
-    if (!currentDish) return;
-
-    const newDish = {
-      ...currentDish,
-      quantity: dishModalState.quantity,
-      notes: dishModalState.notes
-    };
-
-    setSelectedDishes(prev => {
-      const existingIndex = prev.findIndex(d => d.id === newDish.id);
-      if (existingIndex !== -1) {
-        const updated = [...prev];
-        updated[existingIndex].quantity += newDish.quantity;
-        updated[existingIndex].notes = newDish.notes;
-        return updated;
-      }
-      return [...prev, newDish];
-    });
-
-    if (dishModalState.addToReservation) {
-      setReservationForm(prev => ({ ...prev, preorderCheck: true }));
-      if (!showTableModal) {
-        openTableReservationModal();
-      }
-    }
-  }, [currentDish, dishModalState, showTableModal, openTableReservationModal]);
-
   const removeDishFromSelection = useCallback((index) => {
     setSelectedDishes(prev => prev.filter((_, i) => i !== index));
   }, []);
@@ -304,6 +276,15 @@ const RestaurantMenuClient = () => {
     return selectedplatees.reduce((total, plate) => total + (plate.prix * plate.quantity), 0);
   }, [selectedplatees]);
 
+  // Filter menus based on search term and active category
+  const filteredMenus = menus.filter(menu => {
+    const matchesCategory = activeCategory === 'all' || menu.category === activeCategory;
+    const matchesSearch = searchTerm === '' || 
+      menu.nom_plat.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      menu.desciption.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -318,41 +299,52 @@ const RestaurantMenuClient = () => {
     <div className="font-raleway bg-wood-50 text-wood-900">
       <Header />
 
-      <section className="relative h-[50vh] bg-cover bg-center" >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          preload="auto"
+      <section className="relative h-[50vh] bg-cover bg-center " style={{ backgroundImage: "url('https://b.zmtcdn.com/data/pictures/3/20677893/7c8b357e41fa1e3aeb5c974f207d1742.jpg?fit=around|960:500&crop=960:500;*,*')" }}>
+
+  <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+
+  <div className="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white">
+    <h1 className="text-4xl md:text-6xl font-layfair font-bold mb-4 text-shadow-lg">
+      Service de Livraison
+    </h1>
+
+    <p className="text-xl md:text-2xl mb-8 font-layfair max-w-2xl text-shadow-md">
+      Profitez de nos plats d'exception livrés directement chez vous, avec rapidité, soin et élégance.
+    </p>
+
+    <div className="mb-6 w-full max-w-lg mx-auto">
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Rechercher un plat..."
+          className="w-full px-6 py-3 rounded-full border border-wood-400 focus:outline-none focus:ring-2 focus:ring-amber-700 bg-white text-gray-800 placeholder-gray-500 transition-all shadow-md hover:shadow-lg"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <svg
+          className="absolute right-4 top-3 h-5 w-5 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-                    <source src={restaurantVidio} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
-        <div className="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white">
-          <div className="mb-4">
-            <span className="inline-block px-4 font-layfair py-1 bg-wood-700 text-white text-sm font-medium rounded-full">Maroc</span>
-          </div>
-          <h1 className="text-4xl md:text-6xl font-layfair font-bold mb-4">Serve Livraison</h1>
-          <p className="text-xl md:text-2xl mb-8 font-layfair max-w-2xl">Profitez de nos plats d'exception livrés directement chez vous, avec rapidité, soin et élégance.</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <button 
-              onClick={() => setShowOrderSummary(false)}
-              className="bg-wood-500 hover:bg-wood-600 text-white px-6 py-3 rounded-full text-sm font-medium transition-colors"
-            >
-              Votre Commande
-            </button>
-          </div>
-        </div>
-      </section>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          ></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       <section className="py-8 bg-white border-b border-gray-200">
         <div className="container mx-auto px-4">
-
+        
           <div className="flex flex-wrap items-center justify-center gap-3">
-          
             <button 
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === 'all' ? 'bg-wood-700 text-white' : 'bg-wood-100 text-wood-700 hover:bg-wood-200'}`}
               onClick={() => setActiveCategory('all')}
@@ -374,52 +366,61 @@ const RestaurantMenuClient = () => {
 
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-        
-          {categories.map(category => {
-            const categoryMenus = menus.filter(menu => menu.category === category.mon_categorie);
-            if (activeCategory !== 'all' && activeCategory !== category.mon_categorie) return null;
-            if (categoryMenus.length === 0) return null;
-            
-            return (
-              <div key={category.id} className="menu-category mb-16">
-                
-                <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">{category.mon_categorie}</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {categoryMenus.map(menu => (
-                    <div key={menu.id} className="flex gap-4">
-                      <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                        <img 
+          {filteredMenus.length === 0 ? (
+            <div className="text-center py-12">
+              <h3 className="text-xl font-semibold">Aucun plat trouvé</h3>
+              <p className="text-gray-500">Essayez de modifier vos critères de recherche</p>
+            </div>
+          ) : (
+            categories.map(category => {
+              // Filter menus by category and search term
+              const categoryMenus = filteredMenus.filter(menu => 
+                menu.category === category.mon_categorie
+              );
+
+              if (activeCategory !== 'all' && activeCategory !== category.mon_categorie) return null;
+              if (categoryMenus.length === 0) return null;
+              
+              return (
+                <div key={category.id} className="menu-category mb-16">
+                  <h2 className="text-3xl md:text-4xl font-serif font-bold text-center mb-12">{category.mon_categorie}</h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {categoryMenus.map(menu => (
+                      <div key={menu.id} className="flex gap-4">
+                        <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                          <img 
                             src={`http://localhost:8000/storage/${menu.image}`}
-                          alt={menu.nom_plat} 
-                          className="w-full h-full object-cover" 
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="text-xl font-bold font-serif">{menu.nom_plat}</h3>
-                          <span className="font-semibold text-wood-700">{menu.prix}€</span>
+                            alt={menu.nom_plat} 
+                            className="w-full h-full object-cover" 
+                          />
                         </div>
-                        <p className="text-wood-600 mb-2">{menu.desciption}</p>
-                        <div className="flex items-center justify-between">
-                          <button 
-                            className="bg-wood-500 hover:bg-wood-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors"
-                            onClick={() => openplateOrderModal(menu)}
-                          >
-                            Commander
-                          </button>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-2">
+                            <h3 className="text-xl font-bold font-serif">{menu.nom_plat}</h3>
+                            <span className="font-semibold text-wood-700">{menu.prix}€</span>
+                          </div>
+                          <p className="text-wood-600 mb-2">{menu.desciption}</p>
+                          <div className="flex items-center justify-between">
+                            <button 
+                              className="bg-wood-500 hover:bg-wood-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors"
+                              onClick={() => openplateOrderModal(menu)}
+                            >
+                              Commander
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </section>
 
-      {/* Panier flottant */}
+      {/* Floating cart */}
       {selectedplatees.length > 0 && (
         <div className="fixed bottom-4 right-4 z-50">
           <button 
@@ -436,7 +437,7 @@ const RestaurantMenuClient = () => {
         </div>
       )}
 
-      {/* Résumé de la commande */}
+      {/* Order summary */}
       {showOrderSummary && (
         <div className="fixed bottom-20 right-4 bg-white p-6 rounded-lg shadow-xl z-50 w-96 max-h-[70vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
@@ -486,15 +487,15 @@ const RestaurantMenuClient = () => {
         </div>
       )}
 
-        <TableReservationModal
-            showModal={showTableModal}
-            closeModal={closeTableReservationModal}
-            reservationForm={reservationForm}
-            handleReservationChange={handleReservationChange}
-            handleReservationSubmit={handleReservationSubmit}
-            selectedDishes={selectedDishes}
-            removeDishFromSelection={removeDishFromSelection}
-        />
+      <TableReservationModal
+        showModal={showTableModal}
+        closeModal={closeTableReservationModal}
+        reservationForm={reservationForm}
+        handleReservationChange={handleReservationChange}
+        handleReservationSubmit={handleReservationSubmit}
+        selectedDishes={selectedDishes}
+        removeDishFromSelection={removeDishFromSelection}
+      />
 
       <OrderModal
         showModal={showplateModal}
@@ -506,14 +507,13 @@ const RestaurantMenuClient = () => {
         addplateToSelection={addplateToSelection}
       />
 
-
       <Notification
         message={toastMessage}
         show={showToast}
         onClose={() => setShowToast(false)}
       />
 
-          <MesCommandesButtonLIVR
+      <MesCommandesButtonLIVR
         restaurant_id={restaurant_id}
         openTableReservationModal={openTableReservationModal}
       />

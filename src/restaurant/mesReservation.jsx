@@ -56,7 +56,8 @@ const ReservationsPage = () => {
       
       console.log(allReservations);
       
-      const now = new Date();
+
+      const now = new Date(); 
 
       setReservations({
         upcoming: allReservations.filter(res =>
@@ -64,20 +65,21 @@ const ReservationsPage = () => {
         ),
         past: allReservations.filter(res => {
           const reservationDate = new Date(`${res.date} ${res.time}`);
+          if (reservationDate < now && res.status !== 'Terminée') {
+          handleCahngeStatus(res, 'Terminée'); 
+          }
+
           return reservationDate < now && res.status === 'Terminée';
         }),
         cancelled: allReservations.filter(res => res.status === 'Annulée')
       });
-      setIsLoading(false);
+      
     } catch (error) {
       console.error('Error fetching reservations:', error);
-      Swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: error.response?.data?.message || "Impossible de charger les réservations",
-      });
-    } 
-  }, [user]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user]); 
 
   useEffect(() => {
     fetchReservations();
@@ -269,6 +271,42 @@ const ReservationsPage = () => {
     });
   };
 
+  const handleCahngeStatus = async (reservation, status) => {
+
+      try {
+
+        const token = sessionStorage.getItem('token');
+  
+        await axios.put(
+          `http://127.0.0.1:8000/api/reservations/${reservation.id}/status`, 
+          { status },  
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+  
+        setReservations(prev => ({
+          ...prev,
+          upcoming: prev.upcoming.filter(res => res.id !== reservation.id),
+          cancelled: [...prev.cancelled, reservation]
+        }));
+  
+        Swal.fire({
+          icon: "success",
+          title: "la recréation est réussie",
+          showConfirmButton: false,
+          timer: 1500
+        });
+
+        await fetchReservations();
+      } catch (error) {
+        console.error('Error during rebooking:', error);
+        Swal.fire({
+          icon: "error",
+          title: "Erreur",
+          text: error.response?.data?.message || "Échec de la recréation de la réservation",
+        });
+      }
+  };
+
   const getStatusBadgeClass = (status) => {
     switch (status) {
       case 'Confirmée': return 'bg-green-100 text-green-800';
@@ -315,7 +353,7 @@ const ReservationsPage = () => {
                   <p className="text-sm text-gray-500">
                     {type === 'cancelled' ? 'Date prévue' : 'Date & Heure'}
                   </p>
-                  <p className="font-medium">{reservation.date}</p>
+                  <p className="font-medium">{reservation.date} {reservation.time}</p>
                 </div>
                 <div>
                   <p className="text-sm font-serif text-gray-500">Personnes</p>
@@ -384,23 +422,15 @@ const ReservationsPage = () => {
 
                 {type === 'past' && (
                   <>
-                    <button 
-                      onClick={() => handleReview(reservation.id)}
-                      className="bg-wood-500 hover:bg-wood-600 font-serif text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
-                    >
-                      <i className="bx bx-star mr-2"></i>
-                      Laisser un avis
-                    </button>
-                    <button 
-                      onClick={() => handleRebook(reservation)}
+                    <Link 
+                      to="/restaurants"
                       className="bg-white hover:bg-gray-50 font-serif text-gray-700 border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
                     >
                       <i className="bx bx-calendar mr-2"></i>
                       Réserver à nouveau
-                    </button>
+                    </Link>
                   </>
                 )}
-
                 {type === 'cancelled' && (
                   <button 
                     onClick={() => handleRebook(reservation)}

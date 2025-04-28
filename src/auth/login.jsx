@@ -3,6 +3,18 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const Login = ({ isLoading, setIsLoading }) => {
+
+  const message = sessionStorage.getItem("message") ;
+  if(message){
+    Swal.fire({
+      icon: "error",
+      title: message,
+      text: "Veuillez vous connecter à votre compte",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+    sessionStorage.removeItem("message");
+  }
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -38,7 +50,8 @@ const Login = ({ isLoading, setIsLoading }) => {
 
 
         if (role === 2) {
-          const res = await axios.get(`http://localhost:8000/api/restaurants/${user_id}`);          const restaurantData = res.data.original.data;
+          const res = await axios.get(`http://localhost:8000/api/restaurants/${user_id}`); 
+          const restaurantData = res.data.original.data;
                     
           if (restaurantData.status === 'accepted') {
             sessionStorage.setItem("restaurant", JSON.stringify(restaurantData));
@@ -99,7 +112,7 @@ const Login = ({ isLoading, setIsLoading }) => {
             showConfirmButton: false,
           });
           setTimeout(() => {
-            window.location.href = "/admin";
+            window.location.href = "/dashboard";
           }, 1200);
         }
       }

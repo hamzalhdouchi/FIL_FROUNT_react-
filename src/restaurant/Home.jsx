@@ -40,9 +40,10 @@ export default function Home() {
           return;
         }
   
-        const { data } = await axios.get("http://127.0.0.1:8000/api/restaurants");
+        const { data } = await axios.get("http://127.0.0.1:8000/api/restaurants/accepted");
         const restaurants = data?.original?.data?.data?.slice(0, 3) || [];
-  
+        console.log(restaurants);
+        
         setRestaurants(restaurants);
         sessionStorage.setItem('restaurant', JSON.stringify(restaurants));
       } catch (err) {

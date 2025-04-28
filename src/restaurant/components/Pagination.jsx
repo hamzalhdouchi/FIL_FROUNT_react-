@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Pagination({ links, onPageChange }) {
-  // Si links est un objet, convertissez-le en tableau
+
   const linksArray = links && typeof links === 'object' && !Array.isArray(links)
     ? Object.entries(links).map(([key, value]) => ({
         ...value,
@@ -15,7 +15,7 @@ function Pagination({ links, onPageChange }) {
       : [];
 
   return (
-    <div className="flex justify-center m-4">
+    <div className="flex justify-center mt-7 mb-6">
       <div className="inline-flex flex-wrap gap-2">
         {linksArray.map((link, index) => (
           <button

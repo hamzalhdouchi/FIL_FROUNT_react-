@@ -28,6 +28,7 @@ import ReservationDash from './restaurant/components/ReservationDach.jsx';
 import AperçuStats from './restaurant/components/Statisitque.jsx';
 import CommandesPageLivr from './restaurant/mesCommandeLivr.jsx';
 import LivreurDash from './restaurant/livreurDach.jsx';
+import VideoCall from './restaurant/vedioStrem.jsx';
 
 
 const App = () => {
