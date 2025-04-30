@@ -63,7 +63,7 @@ const Register = ({ isLoading, setIsLoading }) => {
           }
         });
       } else if (selectedRole === "livreur") {
-        response = await axios.post("http://localhost:8000/api/livreur", formDataToSend, {
+        response = await axios.post("http://localhost:8000/api/register", formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -104,7 +104,6 @@ const Register = ({ isLoading, setIsLoading }) => {
 
   return (
     <form onSubmit={handleRegister} className="space-y-6">
-      {/* Role Selection */}
       <div className="space-y-2">
         <label className="block text-sm font-medium font-serif text-wood-800">Je m'inscris en tant que</label>
         <div className="grid grid-cols-3 gap-3">
@@ -141,7 +140,6 @@ const Register = ({ isLoading, setIsLoading }) => {
         </div>
       </div>
 
-      {/* Common Fields */}
       <div className="space-y-4">
         <div className="space-y-2">
           <label htmlFor="signup-email" className="block text-sm font-serif font-medium text-wood-800">Email</label>
@@ -233,7 +231,6 @@ const Register = ({ isLoading, setIsLoading }) => {
         </div>
     
 
-      {/* Restaurant-specific fields */}
         {selectedRole === "restaurant" && (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -338,8 +335,6 @@ const Register = ({ isLoading, setIsLoading }) => {
       </div>
     </div>
   )}
-
-
 
       {selectedRole === "livreur" && (
         <div className="space-y-4">

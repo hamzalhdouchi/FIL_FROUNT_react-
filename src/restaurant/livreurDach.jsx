@@ -3,6 +3,7 @@
         import Swal from "sweetalert2";
         import { Link } from "react-router-dom";
         import HeaderDach from "./components/layout/headerDach";
+import UserProfile from "./profiel";
 
         const LivreurDash = () => {
         const [commandes, setCommandes] = useState([]);
@@ -14,6 +15,9 @@
         const [newStatut, setNewStatut] = useState("");
         const [restaurant_id, setRestaurant_id] = useState(0);
         const [restaurant_idRT, setRestaurant_idR] = useState(0);
+          const [showProfile, setShowProfile] = useState(false);
+          const [user, setUser] = useState(null);
+          
 
         useEffect(() => {
             fetchCommandes();
@@ -42,11 +46,15 @@
     const handleChangeStatut = async () => {
         console.log(newStatut);
         console.log(selectedCommande.id);
-        
+        const user = JSON.parse(sessionStorage.getItem('user'))
+        const user_id = user.id
         try {
         await axios.put(`http://localhost:8000/api/commandes/${selectedCommande.id}/change_action`, {
             action: newStatut,
         });
+        await axios.put(`http://localhost:8000/api/commandes/${selectedCommande.id}/assign-livreur`, {
+            livreur_id: user_id
+          });
         Swal.fire("Succès", "Le statut a été mis à jour", "success");
         setShowStatusModal(false);
         fetchCommandes();
@@ -69,11 +77,19 @@
             return matchSearch && matchStatut;
         });
         console.log(filteredCommandes);
+
+        
+        useEffect(() => {
+            const token = sessionStorage.getItem("token");
+            const userData = JSON.parse(sessionStorage.getItem("user"));
+            if (userData) {
+            setUser(userData);
+            }
+        }, []);
         
 
         return (
             <div className="bg-wood-50 min-h-screen flex">
-            {/* Sidebar */}
             <aside className="w-64 bg-wood-800 text-white fixed h-full z-10 hidden md:block">
                 <div className="p-4 border-b border-wood-700 flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-full bg-wood-600 flex items-center justify-center">
@@ -96,10 +112,13 @@
                     <span>Gestion des Commandes</span>
                 </Link>
                 
-                <Link to="/profile" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700">
-                    <i className="bx bxs-user-circle text-xl mr-3"></i>
-                    <span>Profil</span>
-                </Link>
+                <button 
+                onClick={() => setShowProfile(true)}
+                className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+                >
+                <i className='bx bxs-user-circle text-xl mr-3'></i>
+                <span>Profile</span>
+                </button>
                 </nav>
 
                 <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
@@ -110,7 +129,6 @@
                 </div>
             </aside>
 
-            {/* Main Content */}
             <div className="flex-1 md:ml-64">
                 <HeaderDach />
 
@@ -146,7 +164,6 @@
                     </div>
                     </div>
 
-                    {/* Table */}
                     <div className="overflow-x-auto">
                     {loading ? (
                         <div className="p-6 text-center text-wood-600">Chargement...</div>
@@ -166,7 +183,7 @@
                         </thead>
                         <tbody className="bg-white divide-y divide-wood-200">
                             {filteredCommandes
-                                .filter((commande) => commande.statut === "en_attente" || commande.statut === "livraison")
+                                .filter((commande) => commande.livreur_id === user.id || commande.statut === "livraison")
                                 .map((commande) => (
 
                             <tr key={commande.id}>
@@ -242,6 +259,23 @@
             </div>
         )}
             </div>
+
+            {showProfile && user && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-[50vw] w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b p-4">
+              <h3 className="text-lg font-bold text-wood-800">User Profile</h3>
+              <button
+                onClick={() => setShowProfile(false)}
+                className="text-wood-600 hover:text-wood-800 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <UserProfile id_user={user.id} />
+          </div>
+        </div>
+      )}
             </div>
         );
         };

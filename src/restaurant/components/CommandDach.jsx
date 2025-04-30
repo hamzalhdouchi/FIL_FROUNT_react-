@@ -168,20 +168,12 @@ const CommandDash = () => {
     setShowStatusModal(true);
   };
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    const userData = JSON.parse(sessionStorage.getItem("user"));
-    if (userData) {
-      setUser(userData);
-    }
-  }, []);
 
 
   return (
     <div className="bg-wood-50 min-h-screen flex">
       <div className="bg-wood-50">
     <div className="min-h-screen flex">
-      {/* Sidebar desktop */}
       <aside className={`w-64 bg-wood-800 text-white fixed h-full z-10  md:block`}>
         <div className="p-4 border-b border-wood-700">
           <div className="flex items-center space-x-3">
