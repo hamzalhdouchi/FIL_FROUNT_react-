@@ -12,14 +12,16 @@ const ReservationDash = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
 
-  const restaurantId = 2;
-  const API_BASE_URL = "http://localhost:8000/api";
+  const restaurant = JSON.parse(sessionStorage.getItem('restaurant'));
+  console.log(restaurant.id);
+  
+  const restaurantId = 16
 
   const fetchReservations = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${API_BASE_URL}/reservations/${restaurantId}`
+        `http://localhost:8000/api/reservations/${restaurantId}`
       );
       console.log(response);
       

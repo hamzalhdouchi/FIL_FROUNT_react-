@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import MesCommandesButtonLIVR from './components/mesCommandsLivre';
 import restaurantVidio from '../asset/videos/vedioLivre.mp4';
 import TableReservationModal from './components/FormReservation';
+import { dd } from 'framer-motion/client';
 
 const RestaurantMenuClient = () => {
   const [menus, setMenus] = useState([]);
@@ -86,6 +87,7 @@ const RestaurantMenuClient = () => {
       });
     
       setMenus(allPlates);
+      
       setCategories(categoryResponse.data);
       setLoading(false);
     
@@ -276,7 +278,6 @@ const RestaurantMenuClient = () => {
     return selectedplatees.reduce((total, plate) => total + (plate.prix * plate.quantity), 0);
   }, [selectedplatees]);
 
-  // Filter menus based on search term and active category
   const filteredMenus = menus.filter(menu => {
     const matchesCategory = activeCategory === 'all' || menu.category === activeCategory;
     const matchesSearch = searchTerm === '' || 
@@ -373,7 +374,6 @@ const RestaurantMenuClient = () => {
             </div>
           ) : (
             categories.map(category => {
-              // Filter menus by category and search term
               const categoryMenus = filteredMenus.filter(menu => 
                 menu.category === category.mon_categorie
               );

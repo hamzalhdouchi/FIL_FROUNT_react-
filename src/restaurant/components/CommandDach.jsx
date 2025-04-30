@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import HeaderDach from "./layout/headerDach";
+import UserProfile from "../profiel";
 
 const STATUS_OPTIONS = [
   { value: "", label: "Toutes les Commandes" },
@@ -59,6 +60,8 @@ const CommandDash = () => {
     totalReservations: 0,
     totalPlats: 0
   });
+  const [showProfile, setShowProfile] = useState(false);
+  const [user, setUser] = useState(null);
 
   const restaurant = useMemo(() => {
     return JSON.parse(sessionStorage.getItem('restaurant')) || {};
@@ -164,6 +167,15 @@ const CommandDash = () => {
     setNewStatut(commande.statut);
     setShowStatusModal(true);
   };
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const userData = JSON.parse(sessionStorage.getItem("user"));
+    if (userData) {
+      setUser(userData);
+    }
+  }, []);
+
 
   return (
     <div className="bg-wood-50 min-h-screen flex">
@@ -272,10 +284,13 @@ const CommandDash = () => {
           </Link>
 
           <div className="px-4 mt-6 mb-2 text-xs uppercase text-wood-400 font-semibold">Paramètres</div>
-          <Link to="/profile" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-            <i className="bx bxs-user-circle text-xl mr-3"></i>
-            <span>Profil</span>
-          </Link>
+          <button 
+            onClick={() => setShowProfile(true)}
+            className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+          >
+            <i className='bx bxs-user-circle text-xl mr-3'></i>
+            <span>Profile</span>
+          </button>
         </nav>
         </div>
       </div>
@@ -448,6 +463,22 @@ const CommandDash = () => {
           )}
         </section>
       </div>
+      {showProfile && user && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-[50vw] w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b p-4">
+              <h3 className="text-lg font-bold text-wood-800">User Profile</h3>
+              <button
+                onClick={() => setShowProfile(false)}
+                className="text-wood-600 hover:text-wood-800 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <UserProfile id_user={user.id} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

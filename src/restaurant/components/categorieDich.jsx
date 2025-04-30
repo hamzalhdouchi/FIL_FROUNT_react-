@@ -5,6 +5,7 @@ import CategoryModal from "./CategoreForm";
 import UpdateCategoryModal from "./categoreiUpdateForme";
 import { Link } from "react-router-dom";
 import HeaderDach from "./layout/headerDach";
+import UserProfile from "../profiel";
 
 const CategorieDash = () => {
   const [categorie, setCategorie] = useState([]);
@@ -13,6 +14,9 @@ const CategorieDash = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedCategorie, setSelectedCategorie] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [user, setUser] = useState(null);
+  
   const menu = JSON.parse(sessionStorage.getItem('menu'));
   console.log(menu);
   
@@ -80,6 +84,15 @@ const menu_id = menu[0].id;
     cat.mon_categorie.toLowerCase().includes(search.toLowerCase())
   );
 
+
+    useEffect(() => {
+      const token = sessionStorage.getItem("token");
+      const userData = JSON.parse(sessionStorage.getItem("user"));
+      if (userData) {
+        setUser(userData);
+      }
+    }, []);
+  
   return (
     <>
     <div className="bg-wood-50">
@@ -128,10 +141,13 @@ const menu_id = menu[0].id;
           </Link>
 
           <div className="px-4 mt-6 mb-2 text-xs uppercase text-wood-400 font-semibold">Paramètres</div>
-          <Link to="/profile" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-            <i className="bx bxs-user-circle text-xl mr-3"></i>
-            <span>Profil</span>
-          </Link>
+          <button 
+            onClick={() => setShowProfile(true)}
+            className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+          >
+            <i className='bx bxs-user-circle text-xl mr-3'></i>
+            <span>Profile</span>
+          </button>
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
@@ -275,6 +291,23 @@ const menu_id = menu[0].id;
     </section>
         </div>
         </div>
+        
+      {showProfile && user && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-[50vw] w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b p-4">
+              <h3 className="text-lg font-bold text-wood-800">User Profile</h3>
+              <button
+                onClick={() => setShowProfile(false)}
+                className="text-wood-600 hover:text-wood-800 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <UserProfile id_user={user.id} />
+          </div>
+        </div>
+      )}
         </div>
   </>
   );

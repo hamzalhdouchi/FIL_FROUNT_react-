@@ -10,7 +10,6 @@ const AddIngredientForm = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Charger la liste des plats
   useEffect(() => {
     axios.get('/api/plats')
       .then(response => {
@@ -22,7 +21,6 @@ const AddIngredientForm = () => {
       });
   }, []);
 
-  // Gérer le changement d'un champ pour un ingrédient spécifique
   const handleChange = (index, e) => {
     const { name, value } = e.target;
     const newIngredients = [...ingredients];
@@ -30,12 +28,10 @@ const AddIngredientForm = () => {
     setIngredients(newIngredients);
   };
 
-  // Ajouter un nouveau champ d'ingrédient
   const addIngredientField = () => {
     setIngredients([...ingredients, { nom_ingredient: '', stock: '', unite_mesure: '', plat_id: '' }]);
   };
 
-  // Supprimer un champ d'ingrédient
   const removeIngredientField = (index) => {
     if (ingredients.length > 1) {
       const newIngredients = [...ingredients];
@@ -44,7 +40,6 @@ const AddIngredientForm = () => {
     }
   };
 
-  // Soumettre tous les ingrédients
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -52,7 +47,6 @@ const AddIngredientForm = () => {
     setErrorMessage('');
 
     try {
-      // Filtrer les ingrédients valides (tous les champs remplis)
       const validIngredients = ingredients.filter(ing => 
         ing.nom_ingredient && ing.stock && ing.unite_mesure && ing.plat_id
       );

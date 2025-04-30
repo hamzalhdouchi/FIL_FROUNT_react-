@@ -12,14 +12,16 @@ const UNITS = [
 ];
 
 const AddIngredientsModal = ({ closeModal, fetchdata }) => {
+  const restaurants = JSON.parse(sessionStorage.getItem('restaurant'));
+  const res_id = restaurants.id;
+
   const [formState, setFormState] = useState({
-    ingredients: [{ nom_ingredient: '', stock: '', unite_mesure: '' }],
+    ingredients: [{ nom_ingredient: '', stock: '', unite_mesure: '', restaurants_id: res_id }],
     isLoading: false,
     error: null,
     touched: {}
   });
 
-  // Effet pour nettoyer les erreurs quand les champs sont modifiés
   useEffect(() => {
     if (formState.error) {
       setFormState(prev => ({ ...prev, error: null }));
@@ -43,7 +45,7 @@ const AddIngredientsModal = ({ closeModal, fetchdata }) => {
   const addIngredientField = useCallback(() => {
     setFormState(prev => ({
       ...prev,
-      ingredients: [...prev.ingredients, { nom_ingredient: '', stock: '', unite_mesure: '' }]
+      ingredients: [...prev.ingredients, { nom_ingredient: '', stock: '', unite_mesure: '', restaurants_id: res_id }]
     }));
   }, []);
 

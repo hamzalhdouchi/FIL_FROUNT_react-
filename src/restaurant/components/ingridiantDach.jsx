@@ -5,6 +5,7 @@ import IngredientsModal from "./FormeIngrediant";
 import EditIngredientModal from "./updateIngradiantForm"; // Import du modal d'édition
 import { Link } from "react-router-dom";
 import HeaderDach from "./layout/headerDach";
+import UserProfile from "../profiel";
 
 const IngredientsDish = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -13,11 +14,17 @@ const IngredientsDish = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [user, setUser] = useState(null);
 
   const fetchIngredients = async () => {
     try {
+      const restaurants = JSON.parse(sessionStorage.getItem('restaurant'));
+      const res_id = restaurants.id;
       setLoading(true);
-      const response = await axios.get("http://localhost:8000/api/ingredients");
+      const response = await axios.get(`http://localhost:8000/api/ingredients/${res_id}/res`);
+      console.log(response.data);
+      
       setIngredients(response.data);
     } catch (error) {
       console.error("Erreur lors du chargement des ingrédients :", error);
@@ -75,7 +82,7 @@ const IngredientsDish = () => {
   };
 
   const handleUpdate = () => {
-    fetchIngredients(); // Recharge la liste après modification
+    fetchIngredients(); 
     setShowUpdateModal(false);
     setSelectedIngredient(null);
   };
@@ -84,11 +91,19 @@ const IngredientsDish = () => {
     ingredient.nom_ingredient.toLowerCase().includes(search.toLowerCase())
   );
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const userData = JSON.parse(sessionStorage.getItem("user"));
+    if (userData) {
+      setUser(userData);
+    }
+  }, []);
+
+
   return (
 
     <div className="bg-wood-50">
     <div className="min-h-screen flex">
-      {/* Sidebar desktop */}
       <aside className={`w-64 bg-wood-800 text-white fixed h-full z-10  md:block`}>
         <div className="p-4 border-b border-wood-700">
           <div className="flex items-center space-x-3">
@@ -131,10 +146,13 @@ const IngredientsDish = () => {
           </Link>
 
           <div className="px-4 mt-6 mb-2 text-xs uppercase text-wood-400 font-semibold">Paramètres</div>
-          <Link to="/profile" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-            <i className="bx bxs-user-circle text-xl mr-3"></i>
-            <span>Profil</span>
-          </Link>
+          <button 
+            onClick={() => setShowProfile(true)}
+            className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+          >
+            <i className='bx bxs-user-circle text-xl mr-3'></i>
+            <span>Profile</span>
+          </button>
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
@@ -283,6 +301,22 @@ const IngredientsDish = () => {
     </section>
     </div>
     </div>
+    {showProfile && user && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-[50vw] w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b p-4">
+              <h3 className="text-lg font-bold text-wood-800">User Profile</h3>
+              <button
+                onClick={() => setShowProfile(false)}
+                className="text-wood-600 hover:text-wood-800 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <UserProfile id_user={user.id} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

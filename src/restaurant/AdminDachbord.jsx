@@ -198,10 +198,6 @@ const BonAppetitDashboard = () => {
             <i className='bx bxs-store text-xl mr-3'></i>
             <span>Restaurant Management</span>
           </a>
-          <a href="#statistics" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-            <i className='bx bxs-bar-chart-alt-2 text-xl mr-3'></i>
-            <span>Statistics</span>
-          </a>
 
           <div className="px-4 mt-6 mb-2 text-xs uppercase text-wood-400 font-semibold">Settings</div>
           <button 

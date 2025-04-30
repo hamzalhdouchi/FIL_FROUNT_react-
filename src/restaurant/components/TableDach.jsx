@@ -5,6 +5,7 @@ import TableModal from "./formTable";
 import UpdateTableModal from "./UPdateTableStatus";
 import { Link } from "react-router-dom";
 import HeaderDach from "./layout/headerDach";
+import UserProfile from "../profiel";
 
 const TableDash = () => {
   const [tables, setTables] = useState([]);
@@ -15,6 +16,8 @@ const TableDash = () => {
   const [selectedTable, setSelectedTable] = useState(null);
   const [restaurant_id, setRestaurant_id] = useState(0);
   const [restaurant_idRT, setRestaurant_idR] = useState(0);
+  const [showProfile, setShowProfile] = useState(false);
+  const [user, setUser] = useState(null);
 
   const fetchTables = async () => {
     const restaurant = JSON.parse(sessionStorage.getItem('restaurant'));  
@@ -87,6 +90,14 @@ const TableDash = () => {
     table.statut.toLowerCase().includes(search.toLowerCase())
   );
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const userData = JSON.parse(sessionStorage.getItem("user"));
+    if (userData) {
+      setUser(userData);
+    }
+  }, []);
+
   return (
     <div className="bg-wood-50">
     <div className="min-h-screen flex">
@@ -134,10 +145,13 @@ const TableDash = () => {
           </Link>
 
           <div className="px-4 mt-6 mb-2 text-xs uppercase text-wood-400 font-semibold">Paramètres</div>
-          <Link to="/profile" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-            <i className="bx bxs-user-circle text-xl mr-3"></i>
-            <span>Profil</span>
-          </Link>
+          <button 
+            onClick={() => setShowProfile(true)}
+            className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+          >
+            <i className='bx bxs-user-circle text-xl mr-3'></i>
+            <span>Profile</span>
+          </button>
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
@@ -319,6 +333,23 @@ const TableDash = () => {
         />
         )}
 
+
+      {showProfile && user && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-[50vw] w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b p-4">
+              <h3 className="text-lg font-bold text-wood-800">User Profile</h3>
+              <button
+                onClick={() => setShowProfile(false)}
+                className="text-wood-600 hover:text-wood-800 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <UserProfile id_user={user.id} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

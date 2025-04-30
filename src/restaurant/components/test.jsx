@@ -87,7 +87,6 @@ const AddIngredientsModal = ({ closeModal, handleSubmitIngredients }) => {
         </div>
 
         <form onSubmit={handleFormSubmit} className="p-6 space-y-4">
-          {/* Messages d'état */}
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
               {error}

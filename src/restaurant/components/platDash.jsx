@@ -6,12 +6,15 @@ import EditPlatModal from "./editePlateForme";
 import { Link } from "react-router-dom";
 import Pagination from "./Pagination";
 import HeaderDach from "./layout/headerDach";
+import UserProfile from "../profiel";
 
 const PlatDash = () => {
   const [plats, setPlats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [showProfile, setShowProfile] = useState(false);
+  const [user, setUser] = useState(null);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -54,7 +57,7 @@ const PlatDash = () => {
   const filteredPlats = plats.filter((plat) => {
     const searchMatch =
       plat.nom_plat?.toLowerCase().includes(search.toLowerCase()) ||
-      plat.description?.toLowerCase().includes(search.toLowerCase());
+      plat.desciption?.toLowerCase().includes(search.toLowerCase());
     const filterMatch =
       filter === "all" ||
       (filter === "available" && plat.disponible) ||
@@ -122,6 +125,15 @@ const PlatDash = () => {
     setSelectedPlat(plat);
     setEditModalOpen(true);
   };
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const userData = JSON.parse(sessionStorage.getItem("user"));
+    if (userData) {
+      setUser(userData);
+    }
+  }, []);
+
 
   return (
     <div className="bg-wood-50">
@@ -226,10 +238,13 @@ const PlatDash = () => {
           </Link>
 
           <div className="px-4 mt-6 mb-2 text-xs uppercase text-wood-400 font-semibold">Paramètres</div>
-          <Link to="/profile" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
-            <i className="bx bxs-user-circle text-xl mr-3"></i>
-            <span>Profil</span>
-          </Link>
+          <button 
+            onClick={() => setShowProfile(true)}
+            className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+          >
+            <i className='bx bxs-user-circle text-xl mr-3'></i>
+            <span>Profile</span>
+          </button>
         </nav>
         </div>
       </div>
@@ -286,7 +301,7 @@ const PlatDash = () => {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Plate</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Nom</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Description</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">desciption</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Prix</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Statut</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-wood-700 uppercase tracking-wider">Actions</th>
@@ -303,7 +318,7 @@ const PlatDash = () => {
         />
       </td>
       <td className="px-6 py-4 text-sm font-medium text-wood-900">{plat.nom_plat}</td>
-      <td className="px-6 py-4 text-sm text-wood-700 max-w-xs truncate">{plat.description}</td>
+      <td className="px-6 py-4 text-sm text-wood-700 max-w-xs truncate">{plat.desciption}</td>
       <td className="px-6 py-4 text-sm text-wood-700">{plat.prix?.toFixed(2)} €</td>
       <td className="px-6 py-4">
         <span
@@ -347,7 +362,6 @@ const PlatDash = () => {
         />
       </div>
 
-      {/* Modale création */}
       {showCreateModal && (
         <CreatePlatModal
         closeModal={() => setShowCreateModal(false)}
@@ -358,7 +372,6 @@ const PlatDash = () => {
       />
       )}
 
-      {/* Modale édition */}
       {editModalOpen && (
         <EditPlatModal
           idPlate={selectedPlat.id}
@@ -371,6 +384,22 @@ const PlatDash = () => {
     </section>
     </div>
     </div>
+    {showProfile && user && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-[50vw] w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b p-4">
+              <h3 className="text-lg font-bold text-wood-800">User Profile</h3>
+              <button
+                onClick={() => setShowProfile(false)}
+                className="text-wood-600 hover:text-wood-800 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <UserProfile id_user={user.id} />
+          </div>
+        </div>
+      )}
       </div>
   );
 };

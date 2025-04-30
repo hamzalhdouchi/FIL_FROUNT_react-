@@ -5,13 +5,14 @@ import Swal from 'sweetalert2';
 const EditPlatModal = ({ open, onClose, plat, onUpdate, idPlate, ingredients }) => {
   const [formData, setFormData] = useState({
     nom_plat: '',
-    description: '',
+    desciption: '',
     prix: '',
     image: null,
     temps_Preparation: '',
     categorie_id: '',
     ingredients: [],
   });
+  console.log('fjdkvdvjfjkjvdfjkjkdjgjfk',plat);
   
 
   const [isLoading, setIsLoading] = useState(false);
@@ -21,8 +22,8 @@ const EditPlatModal = ({ open, onClose, plat, onUpdate, idPlate, ingredients }) 
     
     if (plat) {
       setFormData({
-        nom_plat: plat.nom_plat_plat || '',
-        description: plat.desciption || '',
+        nom_plat: plat.nom_plat || '',
+        desciption: plat.desciption || '',
         prix: plat.prix || '',
         image: null,
         temps_Preparation: plat.temps_Preparation || '',
@@ -36,9 +37,6 @@ const EditPlatModal = ({ open, onClose, plat, onUpdate, idPlate, ingredients }) 
     const { name, value, files, selectedOptions } = e.target;
     if (name === 'image') {
       setFormData({ ...formData, image: files[0] });
-    } else if (name === 'ingredients') {
-      const selectedIngredients = Array.from(selectedOptions, (option) => option.value);
-      setFormData({ ...formData, ingredients: selectedIngredients });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -60,12 +58,13 @@ const EditPlatModal = ({ open, onClose, plat, onUpdate, idPlate, ingredients }) 
 
     setIsLoading(true);
     try {
+      console.log(formData);
+      
       const data = new FormData();
       data.append('nom_plat_plat', formData.nom_plat);
-      data.append('desciption', formData.description);
+      data.append('desciption', formData.desciption);
       data.append('prix', formData.prix);
       data.append('temps_Preparation', formData.temps_Preparation);
-      data.append('_method', 'PUT');
 
       if (formData.image) {
         data.append('image', formData.image);
@@ -129,7 +128,7 @@ const EditPlatModal = ({ open, onClose, plat, onUpdate, idPlate, ingredients }) 
               <input
                 type="text"
                 name="nom_plat"
-                value={formData.nom_plat_plat}
+                value={formData.nom_plat}
                 onChange={handleChange}
                 disabled={isLoading}
                 className="w-full px-4 py-2 border rounded-lg focus:ring-wood-500 focus:border-wood-500"
@@ -138,9 +137,9 @@ const EditPlatModal = ({ open, onClose, plat, onUpdate, idPlate, ingredients }) 
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">desciption</label>
               <textarea
-                name="description"
+                name="desciption"
                 value={formData.desciption}
                 onChange={handleChange}
                 disabled={isLoading}

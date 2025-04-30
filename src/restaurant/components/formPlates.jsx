@@ -11,8 +11,8 @@ export default function CreatePlatModal({ closeModal, selectedPlat, fetchPlats }
   console.log(menu);
   
 const menu_id = menu[0].id;
-console.log(menu_id);
-
+const restaurants = JSON.parse(sessionStorage.getItem('restaurant'));
+const res_id = restaurants.id;
 
   const [form, setForm] = useState({
     nom_plat: selectedPlat ? selectedPlat.nom_plat : '',
@@ -27,7 +27,7 @@ console.log(menu_id);
 
   useEffect(() => {
     axios.get(`http://localhost:8000/api/categories/${menu_id}`).then(res => setCategories(res.data));
-    axios.get('http://localhost:8000/api/ingredients').then(res => setIngredients(res.data));
+    axios.get(`http://localhost:8000/api/ingredients/${res_id}/res`).then(res => setIngredients(res.data));
   }, []);
 
   const handleChange = (e) => {

@@ -69,8 +69,10 @@ const RestaurantMenuClient = () => {
             })));
           }
         });
+      console.log(menuResponse);
       
         setMenus(allPlates);
+
         setCategories(categoryResponse.data);
         setLoading(false);
       

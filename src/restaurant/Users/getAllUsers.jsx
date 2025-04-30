@@ -84,7 +84,7 @@ const GetUsers = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/users/${userId}`);
+        await axios.delete(`http://127.0.0.1:8000/api/User/${userId}`);
         
         Swal.fire({
           title: 'Supprimé !',
@@ -129,7 +129,6 @@ const GetUsers = () => {
       </div>
     
       <div className="bg-white rounded-xl shadow-md border border-wood-100 overflow-hidden">
-        {/* Barre de filtres et recherche */}
         <div className="p-4 border-b border-wood-100 bg-wood-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
             <div className="flex items-center space-x-2">
@@ -174,7 +173,6 @@ const GetUsers = () => {
           </div>
         </div>
       
-        {/* Gestion des états de chargement et erreurs */}
         {loading && (
           <div className="p-4 flex justify-center items-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-wood-600"></div>
@@ -188,7 +186,6 @@ const GetUsers = () => {
           </div>
         )}
       
-        {/* Tableau des utilisateurs */}
         {!loading && !error && (
           <>
             <div className="overflow-x-auto">
@@ -204,7 +201,7 @@ const GetUsers = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-wood-200">
                   {users.length > 0 ? (
-                    users.map(user => (
+                    users.filter(use => use.role_id !== 3).map(user => (
                       <tr key={user.id} className="hover:bg-wood-50 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
@@ -275,7 +272,7 @@ const GetUsers = () => {
               </table>
             </div>
             <div className='mb-2'>
-            <Pagination links={links} onPageChange={handlePageChange} /> {/* Utilisation de Pagination */}
+            <Pagination links={links} onPageChange={handlePageChange} /> 
             </div>
           </>
         )}
