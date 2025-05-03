@@ -7,11 +7,23 @@ import Footer from './components/footer';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import MesCommandesButtonLIVR from './components/mesCommandsLivre';
-import restaurantVidio from '../asset/videos/vedioLivre.mp4';
 import TableReservationModal from './components/FormReservation';
-import { dd } from 'framer-motion/client';
-
 const RestaurantMenuClient = () => {
+
+              useEffect(() => {
+              const token = sessionStorage.getItem("token");
+              const userData = JSON.parse(sessionStorage.getItem("user"));
+              if (userData) {
+                  const role = userData.role_id;
+                  if (role !== 1) {
+                  }
+              }
+              if (!token || !userData) {
+                  
+              window.location.href ='/'
+              }
+              }, []);
+
   const [menus, setMenus] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);

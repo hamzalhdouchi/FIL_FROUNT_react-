@@ -15,6 +15,21 @@ export default function Home() {
   const [restaurants , setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
 
+ useEffect(() => {
+            const token = sessionStorage.getItem("token");
+            const userData = JSON.parse(sessionStorage.getItem("user"));
+            if (userData) {
+                const role = userData.role_id;
+                if (role !== 4) {
+                }
+            }
+            if (!token || !userData) {
+                
+            window.location.href ='/'
+            }
+            
+            }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {

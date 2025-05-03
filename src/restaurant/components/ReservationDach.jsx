@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import UpdateReservationStatusModal from "./UpdateReservationStatusModal";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import HeaderDach from "./layout/headerDach";
 
 const ReservationDash = () => {
@@ -11,9 +11,8 @@ const ReservationDash = () => {
   const [search, setSearch] = useState("");
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
-
+  const navigate = useNavigate();
   const restaurant = JSON.parse(sessionStorage.getItem('restaurant'));
-  console.log(restaurant.id);
   
   const restaurantId = 16
 
@@ -91,10 +90,30 @@ const ReservationDash = () => {
         reservation.name.toLowerCase().includes(search.toLowerCase()))
   );
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    navigate('/');
+  };
+
+  useEffect(() => {
+                const token = sessionStorage.getItem("token");
+                const userData = JSON.parse(sessionStorage.getItem("user"));
+                if (userData) {
+                    const role = userData.role_id;
+                    if (role !== 2) {
+                    }
+                }
+                if (!token || !userData) {
+                    
+                window.location.href ='/'
+                }
+                }, []);
+  
+
   return (
     <div className="bg-wood-50">
     <div className="min-h-screen flex">
-      {/* Sidebar desktop */}
       <aside className={`w-64 bg-wood-800 text-white fixed h-full z-10  md:block`}>
         <div className="p-4 border-b border-wood-700">
           <div className="flex items-center space-x-3">
@@ -145,10 +164,14 @@ const ReservationDash = () => {
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
-          <a href="#logout" className="flex items-center text-wood-300 hover:text-white">
-            <i className="bx bx-log-out text-xl mr-3"></i>
-            <span>Déconnexion</span>
-          </a>
+        <button 
+              onClick={handleLogout}
+              className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+            >
+              <i className='bx bx-log-out text-xl mr-3'></i>
+              <span>Logout</span>
+            </button>
+
         </div>
       </aside>
 

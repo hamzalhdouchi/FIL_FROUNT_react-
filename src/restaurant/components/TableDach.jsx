@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import TableModal from "./formTable";
 import UpdateTableModal from "./UPdateTableStatus";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import HeaderDach from "./layout/headerDach";
 import UserProfile from "../profiel";
 
@@ -18,6 +18,7 @@ const TableDash = () => {
   const [restaurant_idRT, setRestaurant_idR] = useState(0);
   const [showProfile, setShowProfile] = useState(false);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   const fetchTables = async () => {
     const restaurant = JSON.parse(sessionStorage.getItem('restaurant'));  
@@ -90,18 +91,34 @@ const TableDash = () => {
     table.statut.toLowerCase().includes(search.toLowerCase())
   );
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    const userData = JSON.parse(sessionStorage.getItem("user"));
-    if (userData) {
-      setUser(userData);
-    }
-  }, []);
+  
+   useEffect(() => {
+              const token = sessionStorage.getItem("token");
+              const userData = JSON.parse(sessionStorage.getItem("user"));
+              if (userData) {
+                  const role = userData.role_id;
+                  if (role !== 2) {
+                  }
+              }
+              if (!token || !userData) {
+                  
+              window.location.href ='/'
+              }else{
+              if (userData) {
+                  setUser(userData);
+              }
+              }
+              }, []);
+ 
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    navigate('/');
+  };
 
   return (
     <div className="bg-wood-50">
     <div className="min-h-screen flex">
-      {/* Sidebar desktop */}
       <aside className={`w-64 bg-wood-800 text-white fixed h-full z-10  md:block`}>
         <div className="p-4 border-b border-wood-700">
           <div className="flex items-center space-x-3">
@@ -155,10 +172,13 @@ const TableDash = () => {
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
-          <a href="#logout" className="flex items-center text-wood-300 hover:text-white">
-            <i className="bx bx-log-out text-xl mr-3"></i>
-            <span>Déconnexion</span>
-          </a>
+        <button 
+              onClick={handleLogout}
+              className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+            >
+              <i className='bx bx-log-out text-xl mr-3'></i>
+              <span>Logout</span>
+            </button>
         </div>
       </aside>
 
@@ -209,14 +229,19 @@ const TableDash = () => {
             <span>Profil</span>
           </Link>
         </nav>
+        <button 
+              onClick={handleLogout}
+              className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+            >
+              <i className='bx bx-log-out text-xl mr-3'></i>
+              <span>Logout</span>
+            </button>
         </div>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 md:ml-64">
         <HeaderDach />
 
-          {/* Tables Section */}
           <section className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-wood-800">Liste des Tables</h3>
@@ -229,7 +254,6 @@ const TableDash = () => {
             </div>
 
 
-            {/* Tables Table */}
             <div className="bg-white rounded-lg shadow-sm border border-wood-100 overflow-hidden">
               {loading ? (
                 <div className="p-8 text-center">
@@ -317,7 +341,6 @@ const TableDash = () => {
         </div>
       </div>
 
-      {/* Create Table Modal */}
       {showCreateModal && (
         <TableModal
           closeModal={() => setShowCreateModal(false)}

@@ -7,6 +7,7 @@ const MesCommandesButton = ({ restaurant_id, table_id, openTableReservationModal
     navigate(`/commandes/${restaurant_id}/table/${table_id}`);
   };
 
+
   return (
     <section className="py-16 bg-wood-100">
     <div className="container mx-auto px-4 text-center">

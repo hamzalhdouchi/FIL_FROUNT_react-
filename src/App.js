@@ -11,7 +11,6 @@ import ReservationsPage from './/restaurant/mesReservation'
 import UserProfile from './restaurant/profiel.jsx';
 import RestaurantMenuClient from './restaurant/menuPageClient.jsx';
 import RestaurantMenuUser from './restaurant/menuPageUser.jsx';
-import Page404 from './restaurant/404.jsx';
 import CommandesPage from './restaurant/mesCommend.jsx';
 import BonAppetitDashboards from './restaurant/restaurantDashbord.jsx';
 import AddCategoryModal from './restaurant/components/CategoreForm.jsx';
@@ -29,6 +28,7 @@ import AperçuStats from './restaurant/components/Statisitque.jsx';
 import CommandesPageLivr from './restaurant/mesCommandeLivr.jsx';
 import LivreurDash from './restaurant/livreurDach.jsx';
 import VideoCall from './restaurant/vedioStrem.jsx';
+import Page404 from './restaurant/404.jsx';
 
 
 const App = () => {
@@ -57,7 +57,7 @@ const App = () => {
         <Route path="/Commandes/:restaurant_id/table/:table_id" element={<CommandesPage />} />
         <Route path="/Livraisons/:restaurant_id" element={<CommandesPageLivr />} />
         <Route path="/BonAppetitDashboard" element={<BonAppetitDashboards />} />
-        <Route path="*"lement={<Page404 />} />
+        <Route path="*" lement={<Page404 />} />
 
       </Routes>
     </Router>

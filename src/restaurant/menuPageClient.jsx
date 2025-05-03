@@ -31,6 +31,9 @@ const RestaurantMenuClient = () => {
   const { table_id } = useParams();
   
   
+   
+        
+  
   const token = sessionStorage.getItem('token');
   
   const [plateModalState, setplateModalState] = useState({

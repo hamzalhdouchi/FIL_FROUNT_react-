@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HeaderDach from "./layout/headerDach";
 import UserProfile from "../profiel";
 
@@ -54,6 +54,7 @@ const CommandDash = () => {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedCommande, setSelectedCommande] = useState(null);
   const [newStatut, setNewStatut] = useState("");
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalPrixCommandes: 0,
     totalCommandes: 0,
@@ -168,7 +169,31 @@ const CommandDash = () => {
     setShowStatusModal(true);
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    navigate('/');
+  };
 
+  
+            useEffect(() => {
+            const token = sessionStorage.getItem("token");
+            const userData = JSON.parse(sessionStorage.getItem("user"));
+            if (userData) {
+                const role = userData.role_id;
+                if (role !== 2) {
+                }
+            }
+            if (!token || !userData) {
+                
+            window.location.href ='/'
+            }else{
+            if (userData) {
+                setUser(userData);
+            }
+            }
+            }, []);
+  
 
   return (
     <div className="bg-wood-50 min-h-screen flex">
@@ -191,7 +216,7 @@ const CommandDash = () => {
         <nav className="mt-6">
           <div className="px-4 mb-2 text-xs uppercase text-wood-400 font-semibold">Principal</div>
         
-          <Link to="/commandes" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
+          <Link to="/commandes" className="flex items-center px-4 py-3 text-wood-100 bg-wood-700">
             <i className="bx bxs-receipt text-xl mr-3"></i>
             <span>Gestion des Commandes</span>
           </Link>
@@ -203,7 +228,7 @@ const CommandDash = () => {
             <i className="bx bxs-bowl-hot text-xl mr-3"></i>
             <span>Gestion des Plats</span>
           </Link>
-          <Link to="/ingredients" className="flex items-center px-4 py-3 text-wood-100 bg-wood-700">
+          <Link to="/ingredients" className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors">
             <i className="bx bxs-basket text-xl mr-3"></i>
             <span>Gestion des Ingrédients</span>
           </Link>
@@ -224,13 +249,13 @@ const CommandDash = () => {
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
-          <button onClick={() => {
-            sessionStorage.clear();
-            window.location.href('/')
-          }} className="flex items-center text-wood-300 hover:text-white">
-            <i className="bx bx-log-out text-xl mr-3"></i>
-            <span>Déconnexion</span>
-          </button>
+        <button 
+              onClick={handleLogout}
+              className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+            >
+              <i className='bx bx-log-out text-xl mr-3'></i>
+              <span>Logout</span>
+            </button>
         </div>
       </aside>
 

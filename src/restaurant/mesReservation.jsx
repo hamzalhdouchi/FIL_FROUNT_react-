@@ -331,6 +331,26 @@ const ReservationsPage = () => {
     navigate(-1);
   };
 
+   
+              useEffect(() => {
+              const token = sessionStorage.getItem("token");
+              const userData = JSON.parse(sessionStorage.getItem("user"));
+              if (userData) {
+                  const role = userData.role_id;
+                  if (role !== 1) {
+                  }
+              }
+              if (!token || !userData) {
+                  
+              window.location.href ='/'
+              }else{
+              if (userData) {
+                  setUser(userData);
+              }
+              }
+              }, []);
+  
+
   const ReservationCard = ({ reservation, type }) => {
     return (
       <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform hover:scale-[1.01]">

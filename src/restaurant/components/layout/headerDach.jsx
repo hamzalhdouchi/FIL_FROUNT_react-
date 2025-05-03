@@ -6,7 +6,7 @@ const HeaderDach = () => {
   const token = sessionStorage.getItem('token');
 
   if (!token) {
-    window.location.href('/')
+    window.location.href ='/'
   }
   useEffect(() => {
     const users = JSON.parse(sessionStorage.getItem('user'));

@@ -7,6 +7,27 @@ import UserProfile from '../restaurant/profiel';
 import axios from 'axios';
 
 const BonAppetitDashboard = () => {
+
+
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const userData = JSON.parse(sessionStorage.getItem("user"));
+    if (userData) {
+        const role = userData.role_id;
+        if (role !== 4) {
+           window.location.href ='/'
+        }
+    }
+    if (!token || !userData) {
+        
+    window.location.href ='/'
+    }else{
+    if (userData) {
+        setUser(userData);
+    }
+    }
+    }, []);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -30,14 +51,9 @@ const BonAppetitDashboard = () => {
   
   console.log(user);
   
-
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    const userData = JSON.parse(sessionStorage.getItem("user"));
-    if (userData) {
-      setUser(userData);
-    }
-  }, []);
+  const token = sessionStorage.getItem('token');
+ 
+       
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -111,7 +127,7 @@ const BonAppetitDashboard = () => {
   const handleLogout = () => {
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('token');
-    navigate('/login');
+    navigate('/');
   };
 
   useEffect(() => {

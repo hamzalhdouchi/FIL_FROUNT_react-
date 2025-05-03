@@ -347,6 +347,22 @@ const CommandeCard = ({ commande, type }) => {
     });
     };
 
+     
+        useEffect(() => {
+                    const token = sessionStorage.getItem("token");
+                    const userData = JSON.parse(sessionStorage.getItem("user"));
+                    if (userData) {
+                        const role = userData.role_id;
+                        if (role !== 1) {
+                        }
+                    }
+                    if (!token || !userData) {
+                        
+                    window.location.href ='/'
+                    }
+                    }, []);
+    
+
     return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden transition-transform hover:scale-[1.01]">
         <div className="p-6">

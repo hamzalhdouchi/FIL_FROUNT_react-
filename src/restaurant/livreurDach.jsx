@@ -1,7 +1,7 @@
         import React, { useEffect, useState } from "react";
         import axios from "axios";
         import Swal from "sweetalert2";
-        import { Link } from "react-router-dom";
+        import { Link, Navigate, useNavigate } from "react-router-dom";
         import HeaderDach from "./components/layout/headerDach";
 import UserProfile from "./profiel";
 
@@ -16,7 +16,8 @@ import UserProfile from "./profiel";
         const [restaurant_id, setRestaurant_id] = useState(0);
         const [restaurant_idRT, setRestaurant_idR] = useState(0);
           const [showProfile, setShowProfile] = useState(false);
-          const [user, setUser] = useState(null);
+          const [user, setUser] = useState(0);
+          const navigate = useNavigate();
           
 
         useEffect(() => {
@@ -78,14 +79,34 @@ import UserProfile from "./profiel";
         });
         console.log(filteredCommandes);
 
+        const handleLogout = () => {
+            sessionStorage.removeItem('user');
+            sessionStorage.removeItem('token');
+            navigate('/');
+          };
+
         
-        useEffect(() => {
+        
+            useEffect(() => {
             const token = sessionStorage.getItem("token");
             const userData = JSON.parse(sessionStorage.getItem("user"));
             if (userData) {
-            setUser(userData);
+                const role = userData.role_id;
+                if (role !== 3) {
+                }
             }
-        }, []);
+            if (!token || !userData) {
+                
+            window.location.href ='/'
+            }else{
+            if (userData) {
+                setUser(userData);
+            }
+            }
+            }, []);
+       
+        // console.log(user.id);
+        console.log(user);
         
 
         return (
@@ -122,10 +143,13 @@ import UserProfile from "./profiel";
                 </nav>
 
                 <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
-                <a href="#logout" className="flex items-center text-wood-300 hover:text-white">
-                    <i className="bx bx-log-out text-xl mr-3"></i>
-                    <span>Déconnexion</span>
-                </a>
+                <button 
+              onClick={handleLogout}
+              className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+            >
+              <i className='bx bx-log-out text-xl mr-3'></i>
+              <span>Logout</span>
+            </button>
                 </div>
             </aside>
 
@@ -183,7 +207,7 @@ import UserProfile from "./profiel";
                         </thead>
                         <tbody className="bg-white divide-y divide-wood-200">
                             {filteredCommandes
-                                .filter((commande) => commande.livreur_id === user.id || commande.statut === "livraison")
+                                .filter((commande) =>  commande.statut === "livraison")
                                 .map((commande) => (
 
                             <tr key={commande.id}>

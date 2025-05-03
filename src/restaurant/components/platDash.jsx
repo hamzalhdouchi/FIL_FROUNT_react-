@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import CreatePlatModal from "./formPlates";
 import EditPlatModal from "./editePlateForme";
-import { Link } from "react-router-dom";
+import { Link, Navigate, NavigationType, useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
 import HeaderDach from "./layout/headerDach";
 import UserProfile from "../profiel";
@@ -21,7 +21,7 @@ const PlatDash = () => {
   const [selectedPlat, setSelectedPlat] = useState(null);
   const [menuId, setSelectedmenu_id] = useState(1);
   const [Links, setLinks] = useState({});
-  
+  const navigate = useNavigate();
   const fetchPlats = async (url = "http://localhost:8000/api/plats") => {
     try {
       const menu = JSON.parse(sessionStorage.getItem('menu'));
@@ -126,19 +126,36 @@ const PlatDash = () => {
     setEditModalOpen(true);
   };
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    const userData = JSON.parse(sessionStorage.getItem("user"));
-    if (userData) {
-      setUser(userData);
-    }
-  }, []);
+   
+      useEffect(() => {
+                const token = sessionStorage.getItem("token");
+                const userData = JSON.parse(sessionStorage.getItem("user"));
+                if (userData) {
+                    const role = userData.role_id;
+                    if (role !== 2) {
+                    }
+                }
+                if (!token || !userData) {
+                    
+                window.location.href ='/'
+                }else{
+                if (userData) {
+                    setUser(userData);
+                }
+                }
+                }, []);
+  
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    navigate('/');
+  };
 
 
   return (
     <div className="bg-wood-50">
     <div className="min-h-screen flex">
-      {/* Sidebar desktop */}
       <aside className={`w-64 bg-wood-800 text-white fixed h-full z-10  md:block`}>
         <div className="p-4 border-b border-wood-700">
           <div className="flex items-center space-x-3">
@@ -189,10 +206,13 @@ const PlatDash = () => {
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
-          <a href="#logout" className="flex items-center text-wood-300 hover:text-white">
-            <i className="bx bx-log-out text-xl mr-3"></i>
-            <span>Déconnexion</span>
-          </a>
+        <button 
+              onClick={handleLogout}
+              className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+            >
+              <i className='bx bx-log-out text-xl mr-3'></i>
+              <span>Logout</span>
+            </button>
         </div>
       </aside>
 
@@ -249,7 +269,6 @@ const PlatDash = () => {
         </div>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 md:ml-64">
         <HeaderDach />
     <section id="plats" className="m-8">

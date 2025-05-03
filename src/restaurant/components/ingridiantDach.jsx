@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import IngredientsModal from "./FormeIngrediant";
 import EditIngredientModal from "./updateIngradiantForm"; // Import du modal d'édition
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HeaderDach from "./layout/headerDach";
 import UserProfile from "../profiel";
 
@@ -16,6 +16,7 @@ const IngredientsDish = () => {
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   const fetchIngredients = async () => {
     try {
@@ -91,13 +92,28 @@ const IngredientsDish = () => {
     ingredient.nom_ingredient.toLowerCase().includes(search.toLowerCase())
   );
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    const userData = JSON.parse(sessionStorage.getItem("user"));
-    if (userData) {
-      setUser(userData);
+  
+    useEffect(() => {
+      const token = sessionStorage.getItem("token");
+      const userData = JSON.parse(sessionStorage.getItem("user"));
+      const user_role = userData.role_id;
+    if (!token || user_role !== 4) {
+      window.location.href ='/'
+      
+      
+    }else{
+      if (userData) {
+        setUser(userData);
+      }
     }
-  }, []);
+    }, []);
+ 
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    navigate('/');
+  };
 
 
   return (
@@ -156,10 +172,13 @@ const IngredientsDish = () => {
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-wood-700">
-          <a href="#logout" className="flex items-center text-wood-300 hover:text-white">
-            <i className="bx bx-log-out text-xl mr-3"></i>
-            <span>Déconnexion</span>
-          </a>
+        <button 
+              onClick={handleLogout}
+              className="flex items-center px-4 py-3 text-wood-300 hover:text-white hover:bg-wood-700 transition-colors w-full text-left"
+            >
+              <i className='bx bx-log-out text-xl mr-3'></i>
+              <span>Logout</span>
+            </button>
         </div>
       </aside>
 
@@ -213,7 +232,6 @@ const IngredientsDish = () => {
         </div>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 md:ml-64">
         <HeaderDach />
   
